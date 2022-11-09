@@ -3,7 +3,7 @@ project(ece-city-2-i)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(ece-city-2-i main.c main.c)
+add_executable(ece-city-2-i main.c main.c jeu.c jeu.h)
 
 IF(WIN32)
     target_link_libraries(ece-city-2-i -lmingw32 -lallegro-5.0.10-monolith-md-debug)

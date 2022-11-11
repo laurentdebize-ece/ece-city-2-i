@@ -1,3 +1,5 @@
+#ifndef ECE_CITY_2_I_AFFICHAGE_H
+#define ECE_CITY_2_I_AFFICHAGE_H
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -177,3 +179,5 @@ Classe4 classe4;
 
 void drawLine(Ligne lignes, int x, int y);
 void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, Ligne ligne, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes, bool clickCarreBleu, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_BITMAP* RouteDroite, ALLEGRO_BITMAP* RouteDroite2, ALLEGRO_BITMAP* Tournant, ALLEGRO_BITMAP* Tournant2, ALLEGRO_BITMAP* Tournant3, ALLEGRO_BITMAP* Tournant4, ALLEGRO_BITMAP* DoubleTournant,  ALLEGRO_BITMAP* DoubleTournant2,  ALLEGRO_BITMAP* DoubleTournant3,  ALLEGRO_BITMAP* DoubleTournant4,  ALLEGRO_BITMAP* Croisement,  ALLEGRO_BITMAP* Bat2D,  ALLEGRO_BITMAP* Cabane);
+
+#endif

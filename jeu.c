@@ -73,19 +73,19 @@ void jeuPrincipale(int* finDuJeu) {
     timer1sec = al_create_timer(1);
 
     /// Chargement bitmpa
-    Bat2D = al_load_bitmap("../Image/bat2Dtest.png");
-    Cabane = al_load_bitmap("../Image/cabanes.png");
-    RouteDroite = al_load_bitmap("../Image/routeDroite .png");
-    RouteDroite2 = al_load_bitmap("../Image/routeDroite2 .png");
-    Tournant = al_load_bitmap("../Image/tournant.png");
-    Tournant2 = al_load_bitmap("../Image/tournant2.png");
-    Tournant3 = al_load_bitmap("../Image/tournant3.png");
-    Tournant4 = al_load_bitmap("../Image/tournant4.png");
-    DoubleTournant = al_load_bitmap("../Image/doubletournant.png");
-    DoubleTournant2 = al_load_bitmap("../Image/doubletournant2.png");
-    DoubleTournant3 = al_load_bitmap("../Image/doubletournant3.png");
-    DoubleTournant4 = al_load_bitmap("../Image/doubletournant4.png");
-    Croisement = al_load_bitmap("../Image/croisement.png");
+    Bat2D = al_load_bitmap("../bitmap/bat2Dtest.png");
+    Cabane = al_load_bitmap("../bitmap/cabanes.png");
+    RouteDroite = al_load_bitmap("../bitmap/routeDroite .png");
+    RouteDroite2 = al_load_bitmap("../bitmap/routeDroite2 .png");
+    Tournant = al_load_bitmap("../bitmap/tournant.png");
+    Tournant2 = al_load_bitmap("../bitmap/tournant2.png");
+    Tournant3 = al_load_bitmap("../bitmap/tournant3.png");
+    Tournant4 = al_load_bitmap("../bitmap/tournant4.png");
+    DoubleTournant = al_load_bitmap("../bitmap/doubletournant.png");
+    DoubleTournant2 = al_load_bitmap("../bitmap/doubletournant2.png");
+    DoubleTournant3 = al_load_bitmap("../bitmap/doubletournant3.png");
+    DoubleTournant4 = al_load_bitmap("../bitmap/doubletournant4.png");
+    Croisement = al_load_bitmap("../bitmap/croisement.png");
 
     /// chargement police
     police = al_load_font("../Police/ARCADE_R.TTF",20, 0);

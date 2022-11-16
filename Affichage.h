@@ -15,7 +15,7 @@
 #define LARGEUR_FE 1436
 #define NBJOUEURMAX 4
 #define X_DEPART 500
-#define Y_DEPART 20
+#define Y_DEPART 60
 #define NB_CASES 45
 #define NB_CASESY 35
 #define LARGEUR_CASE 20

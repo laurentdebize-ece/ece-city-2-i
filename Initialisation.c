@@ -9,6 +9,7 @@ void initialiser(Cases tabPlateau[NB_CASES][NB_CASES],Bitmap tabBit[NB_MAX_BAT])
 
     for (int i = 0; i < NB_MAX_BAT; ++i) {
         tabBit[i].batPose = 0;
+        tabBit[i].changementBatBloque = 0;
     }
 
     for (int i = 0; i < NB_CASES; ++i) {

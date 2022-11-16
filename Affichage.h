@@ -69,6 +69,10 @@ typedef struct {
     int empecherDeRentrerPlusieursFoisDAnsLaBoucle;
     int timerPasAfficherSansArret;
     int changemetnBat;
+    int chance1sur4;
+    int nbHabitant;
+    int changementBatBloque;
+    bool incendie;
     int i, j;
 }Bitmap;
 
@@ -162,6 +166,7 @@ typedef struct {
     int numeroCase;
     int numeroJoueur;
     int joueurSurCase;
+    int valeurCompteurAuClic;
 }Cases;
 
 typedef struct {

@@ -146,7 +146,7 @@ void jeuPrincipale(int* finDuJeu) {
     NuageFond = al_load_bitmap("../bitmap/imageCiel.jpg");
     Ruine = al_load_bitmap("../bitmap/ruine(ng).png");
     Immeuble = al_load_bitmap("../bitmap/immeuble(bg).png");
-    GratteCiel = al_load_bitmap("../bitmap/gratteciel(bg).png");
+    GratteCiel = al_load_bitmap("../bitmap/gratte-ciel(bg).png");
     Cabane = al_load_bitmap("../bitmap/cabanes.png");
 
     RouteDroite = al_load_bitmap("../bitmap/routeDroite .png");

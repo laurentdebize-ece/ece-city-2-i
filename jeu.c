@@ -84,6 +84,7 @@ void jeuPrincipale(int* finDuJeu) {
     int ajoutX = 0;
     int ajoutY = 0;
 
+    /*
     Construction tab_constru[LIGNES*COLONNES];
 
     Repere repere_grille;
@@ -104,7 +105,7 @@ void jeuPrincipale(int* finDuJeu) {
 
     init_mairie(&mairie);
 
-
+    */
     ALLEGRO_TIMER* temps_cycle = NULL;
 
 

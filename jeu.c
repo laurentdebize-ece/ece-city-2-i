@@ -138,15 +138,15 @@ void jeuPrincipale(int* finDuJeu) {
 
     /// Chargement bitmpa
     TerrainVague = al_load_bitmap("../bitmap/terrainvague(true).png");
-    Maison1 = al_load_bitmap("../bitmap/house1(bg)2.png");
-    Maison2 = al_load_bitmap("../bitmap/house2(bg)2.png");
+    Maison1 = al_load_bitmap("../bitmap/house1(bg).png");
+    Maison2 = al_load_bitmap("../bitmap/house2(bg).png");
     Maison3 = al_load_bitmap("../bitmap/house3(bg).png");
     Maison4 = al_load_bitmap("../bitmap/house4(bg).png");
     MapFond = al_load_bitmap("../bitmap/mapfinie.png");
     NuageFond = al_load_bitmap("../bitmap/imageCiel.jpg");
     Ruine = al_load_bitmap("../bitmap/ruine(ng).png");
     Immeuble = al_load_bitmap("../bitmap/immeuble(bg).png");
-    GratteCiel = al_load_bitmap("../bitmap/gratte-ciel(bg).png");
+    GratteCiel = al_load_bitmap("../bitmap/gratteciel(bg).png");
     Cabane = al_load_bitmap("../bitmap/cabanes.png");
 
     RouteDroite = al_load_bitmap("../bitmap/routeDroite .png");

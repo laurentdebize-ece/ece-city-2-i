@@ -2,12 +2,12 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 
-#define TUILE_LARGEUR_ISO 24
-#define TUILE_HAUTEUR_ISO 12
+#define TUILE_LARGEUR_ISO 28
+#define TUILE_HAUTEUR_ISO 14
 #define LIGNES 35
 #define COLONNES 45
-#define DEBUT_X 430
-#define DEBUT_Y 50
+#define DEBUT_X 900
+#define DEBUT_Y 224
 
 typedef struct {
     int x, y;
@@ -35,6 +35,7 @@ typedef struct {
     int type;
     int nb_cases_largeur, nb_cases_hauteur;
     bool viable;
+    ALLEGRO_BITMAP *icone;
 } Construction;
 
 typedef struct {
@@ -50,3 +51,4 @@ void draw_cases_route(Construction* tab_constru, int z);
 void draw_cases_centrale(Construction* tab_constru, int z);
 void draw_cases_maison(Construction* tab_constru, int z);
 void init_mairie(Donnees_globales* mairie);
+void affichage_temps(int* timer_secondes, int* timer_minute, ALLEGRO_FONT* police, float x, float y, bool timer_2);

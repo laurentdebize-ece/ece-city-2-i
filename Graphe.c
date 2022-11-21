@@ -1,68 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "time.h"
 #include "Graphe.h"
 #include "File.h"
 
 
-pSommet* CreerArete(pSommet* sommet, int i, int j, int i_bis, int j_bis) {
-
-    if(sommet[i*COLONNES + j]->arc == NULL) {
-        pArc Newarc = (pArc) malloc(sizeof(struct Arc));
-        Newarc->i_sommet = i_bis;
-        Newarc->j_sommet = j_bis;
-        Newarc->arc_suivant = NULL;
-        sommet[i*COLONNES + j]->arc = Newarc;
+void enfiler(t_file* f, int sommet) {
+    t_maillon* sommet_enfile = NULL;
+    sommet_enfile = (t_maillon*) malloc(sizeof(t_maillon));
+    sommet_enfile->num = sommet;
+    sommet_enfile->suiv = NULL;
+    if(f->fin == NULL && f->tete == NULL) {
+        f->tete = f->fin = sommet_enfile;
+    } else {
+        sommet_enfile->suiv = f->tete;   //pour DFS : sommet_enfile->suiv = f->tete;
+        f->tete = sommet_enfile;         //f->tete = sommet_enfile;
     }
-    else {
-        pArc temp = sommet[i*COLONNES + j]->arc;
-        while(temp->arc_suivant != NULL) {
-            temp = temp->arc_suivant;
-        }
-        pArc Newarc = (pArc) malloc(sizeof(struct Arc));
-        Newarc->i_sommet = i_bis;
-        Newarc->j_sommet = j_bis;
-        Newarc->arc_suivant = NULL;
-
-        temp->arc_suivant = Newarc;
-    }
-    return sommet;
-}
-
-Graphe* creerGraphe(int ordre) {
-    Graphe* Newgraphe=(Graphe*)malloc(sizeof(Graphe));
-    Newgraphe->pSommet = (pSommet*)malloc(ordre*sizeof(pSommet));
-
-    for(int i = 0; i < ordre; i++) {
-        Newgraphe->pSommet[i] = (pSommet)malloc(sizeof(struct Sommet));
-        Newgraphe->pSommet[i]->valeur = i;
-        Newgraphe->pSommet[i]->arc = NULL;
-    }
-
-    Newgraphe->ordre = ordre;
-
-    return Newgraphe;
 }
 
 
-void check_relier_cases(Graphe* g, int i_constant, int j_constant, int i , int j, int i_bis, int j_bis, bool pose_de_route, Construction* tab_constru) {
-    if(i_bis+i >= 0 && i_bis+i <= 34 && j_bis+j >= 0 && j_bis+j <= 44) {
-        if((pose_de_route && tab[i_bis+i][j_bis+j].occupee == 1) || (tab[i_bis+i][j_bis+j].type == 0)) {
+int defiler(t_file* f) {
+    int element;
+    t_maillon* sortie = f->tete;
+    element = sortie->num;
+    if(f->tete == f->fin) {
+        f->tete = f->fin = NULL;
+    } else {
+        f->tete = f->tete->suiv;
+    }
+    free(sortie);
+    return element;
+}
 
-            g->pSommet = CreerArete(g->pSommet, i_constant+i, j_constant+j, i_bis+i, j_bis+j);
-            g->pSommet = CreerArete(g->pSommet, i_bis+i, j_bis+j, i_constant+i, j_constant+j);
 
-            tab_constru[i_constant*COLONNES + j_constant].viable = true;
-            tab_constru[(i_bis+i)*COLONNES + j_bis+j].viable = true;
+void parcours_profondeur(Graphe** g, t_file* f, int sommet_init, int* sommet_a_explorer, Construction** tab_constru) {
 
-            /*for(int a = 0; a <LIGNES; a++) {
-                for (int b = 0; b < COLONNES; b++) {
-                    if(tab[a][b].id_bat_pose == tab[i_constant+i][j_constant+j].id_bat_pose) {
-                        tab_constru[a*COLONNES + b].viable = true;
-                    }
-                    if(tab[a][b].id_bat_pose == tab[i_bis+i][j_bis+j].id_bat_pose) {
-                        tab_constru[i_bis*COLONNES + j_bis].viable = true;
-                    }
+    enfiler(f, sommet_init);
+    (*g)->pSommet[sommet_init]->marque = 1;
+    while(f->tete) {
+        *sommet_a_explorer = defiler(f);
+        pArc temps = (*g)->pSommet[*sommet_a_explorer]->arc;
 
+        while(temps) {
+
+            if(temps) {
+                tab_constru[*sommet_a_explorer]->viable = true;
+                tab_constru[temps->i_sommet*COLONNES + temps->j_sommet]->viable = true;
+
+                while(temps && ((*g)->pSommet[temps->i_sommet*COLONNES + temps->j_sommet]->marque != 0)) {
+                    temps = temps->arc_suivant;
                 }
-            }*/
+            }
+            if(temps) {
+                enfiler(f, (temps->i_sommet*COLONNES + temps->j_sommet));
+                (*g)->pSommet[temps->i_sommet*COLONNES + temps->j_sommet]->marque = 1;
+                (*g)->pSommet[temps->i_sommet*COLONNES + temps->j_sommet]->pred = *sommet_a_explorer;
+                temps = temps->arc_suivant;
+            }
+        }
+        printf("%d ", (*g)->pSommet[*sommet_a_explorer]->valeur);
+        (*g)->pSommet[*sommet_a_explorer]->marque = 2;
+    }
+}
+
+void recherche_compo_connexes(Graphe** g, t_file* f, int* sommet_a_explorer, Construction** tab_constru) {
+    for(int i = 0; i < (*g)->ordre; i++) {
+        while ((*g)->pSommet[i]->marque != 2) {
+            parcours_profondeur(g, f, i, sommet_a_explorer, tab_constru);
+            printf("\n");
         }
     }
+}
+
+
+void viabilite(Graphe* g, int sommet_init, Construction* tab_constru) {
+    t_file f;
+    f.tete = f.fin = NULL;
+    for(int i = 0; i < g->ordre; i++) {
+        g->pSommet[i]->marque = 0;
+        g->pSommet[i]->pred = -1;
+    }
+
+    recherche_compo_connexes(&g, &f, &sommet_init, &tab_constru);
+
+    printf("\n");
 }

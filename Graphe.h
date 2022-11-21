@@ -1,5 +1,5 @@
-#ifndef PROJETECECITY_GRAPHE_H
-#define PROJETECECITY_GRAPHE_H
+#ifndef ECE_CITY_2_I_GRAPHE_H
+#define ECE_CITY_2_I_GRAPHE_H
 #include <stdio.h>
 #include <stdlib.h>
 //#include "map.h"

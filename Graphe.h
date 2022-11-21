@@ -15,6 +15,7 @@ typedef struct Arc* pArc;
 struct Sommet {
     struct Arc* arc;
     int valeur, marque, pred;
+    int type;
 };
 
 typedef struct Sommet* pSommet;

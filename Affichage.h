@@ -1,5 +1,7 @@
 #ifndef ECE_CITY_2_I_AFFICHAGE_H
 #define ECE_CITY_2_I_AFFICHAGE_H
+
+#include "Graphe.h"
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -23,7 +25,7 @@
 #define NB_MAX_BAT 30
 #define NB_Cases_Place_ConstruX 2
 #define NB_Cases_Place_ConstruY 2
-#define TEMPS_DE_CONSTRUCTION 700        /// Pour 15 sec : 1850
+#define TEMPS_DE_CONSTRUCTION 50///700        /// Pour 15 sec : 1850
 #define PMMax 3
 
 
@@ -156,18 +158,20 @@ typedef struct {
     int numeroJoueur;
 }Classe4;
 
-
+/*
 typedef struct {
     int occupe;
     int routeOccupe;
     int occupBat;
+    int type;
+    int id_bat_pose;
     //pointeur personnage
     int x1, x2, y1, y2;
     int numeroCase;
     int numeroJoueur;
     int joueurSurCase;
     int valeurCompteurAuClic;
-}Cases;
+}Cases;*/
 
 typedef struct {
     float ligneX1, ligneX2, ligneY1, ligneY2;
@@ -183,7 +187,10 @@ Classe3 classe3;
 Classe4 classe4;
 
 void drawLine(Ligne lignes, int x, int y);
+bool CasesViableAutourDesHabitation(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int k);
 bool incendie(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int k);
 void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, Ligne ligne, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal, int* ecefloos,bool clickCarreBleu, bool affichageRoute, bool affichageEau, bool affichageElec, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police,ALLEGRO_FONT* policePetite, ALLEGRO_BITMAP* RouteDroite, ALLEGRO_BITMAP* RouteDroite2, ALLEGRO_BITMAP* Tournant, ALLEGRO_BITMAP* Tournant2, ALLEGRO_BITMAP* Tournant3, ALLEGRO_BITMAP* Tournant4, ALLEGRO_BITMAP* DoubleTournant, ALLEGRO_BITMAP* DoubleTournant2, ALLEGRO_BITMAP* DoubleTournant3, ALLEGRO_BITMAP* DoubleTournant4, ALLEGRO_BITMAP* Croisement, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* Maison1, ALLEGRO_BITMAP* Maison2, ALLEGRO_BITMAP* Maison3, ALLEGRO_BITMAP* Maison4, ALLEGRO_BITMAP* MapFond, ALLEGRO_BITMAP* NuageFond, ALLEGRO_BITMAP* Ruine, ALLEGRO_BITMAP* Immeuble, ALLEGRO_BITMAP* GratteCiel, ALLEGRO_BITMAP* Cabane, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant);
+
+
 
 #endif

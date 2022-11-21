@@ -11,22 +11,15 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#define TUILE_LARGEUR_ISO 24
-#define TUILE_HAUTEUR_ISO 12
-#define LIGNES 35
-#define COLONNES 45
-#define DEBUT_X 430
-#define DEBUT_Y 50
-
 
 void afficherGrille() {
 
     for(int i = 0; i < LIGNES+1; i++) {
-        al_draw_line(DEBUT_X - i*(TUILE_LARGEUR_ISO/2), DEBUT_Y + i*(TUILE_HAUTEUR_ISO/2), DEBUT_X+(TUILE_LARGEUR_ISO/2 * COLONNES) - i*(TUILE_LARGEUR_ISO/2) , DEBUT_Y+(TUILE_HAUTEUR_ISO/2 * COLONNES) + i*(TUILE_HAUTEUR_ISO/2) , al_map_rgb(0, 0, 0), 1);
+        al_draw_line(DEBUT_X - i*(TUILE_LARGEUR_ISO/2), DEBUT_Y + i*(TUILE_HAUTEUR_ISO/2), DEBUT_X+(TUILE_LARGEUR_ISO/2 * COLONNES) - i*(TUILE_LARGEUR_ISO/2) , DEBUT_Y+(TUILE_HAUTEUR_ISO/2 * COLONNES) + i*(TUILE_HAUTEUR_ISO/2) , al_map_rgba(129, 114, 123, 0.26), 1);
     }
 
     for(int j = 0; j < COLONNES+1; j++) {
-        al_draw_line(DEBUT_X + j*(TUILE_LARGEUR_ISO/2), DEBUT_Y + j*(TUILE_HAUTEUR_ISO/2), DEBUT_X-(TUILE_LARGEUR_ISO/2 * LIGNES) + j*(TUILE_LARGEUR_ISO/2), DEBUT_Y+(TUILE_HAUTEUR_ISO/2 * LIGNES) + j*(TUILE_HAUTEUR_ISO/2), al_map_rgb(0, 0, 0), 1);
+        al_draw_line(DEBUT_X + j*(TUILE_LARGEUR_ISO/2), DEBUT_Y + j*(TUILE_HAUTEUR_ISO/2), DEBUT_X-(TUILE_LARGEUR_ISO/2 * LIGNES) + j*(TUILE_LARGEUR_ISO/2), DEBUT_Y+(TUILE_HAUTEUR_ISO/2 * LIGNES) + j*(TUILE_HAUTEUR_ISO/2), al_map_rgba(129, 114, 123, 0.26), 1);
     }
 
 }
@@ -80,7 +73,7 @@ int collision_iso_j(Point O, Point A, Point B, float x, float y) {
 
 
 void draw_cases_route(Construction* tab_constru, int z) {
-    if(tab_constru[z].viable) {
+    /*if(tab_constru[z].viable) {
         al_draw_filled_triangle(tab_constru[z].pos_x - TUILE_LARGEUR_ISO/2 + 1, tab_constru[z].pos_y, tab_constru[z].pos_x, tab_constru[z].pos_y - TUILE_HAUTEUR_ISO/2 + 1,
                                 tab_constru[z].pos_x, tab_constru[z].pos_y + TUILE_HAUTEUR_ISO/2 - 1, al_map_rgb(0, 255, 0));
         al_draw_filled_triangle(tab_constru[z].pos_x + TUILE_LARGEUR_ISO/2 - 1, tab_constru[z].pos_y, tab_constru[z].pos_x, tab_constru[z].pos_y - TUILE_HAUTEUR_ISO/2 + 1,
@@ -91,7 +84,8 @@ void draw_cases_route(Construction* tab_constru, int z) {
                                 tab_constru[z].pos_x, tab_constru[z].pos_y + TUILE_HAUTEUR_ISO/2 - 1, al_map_rgb(255, 0, 0));
         al_draw_filled_triangle(tab_constru[z].pos_x + TUILE_LARGEUR_ISO/2 - 1, tab_constru[z].pos_y, tab_constru[z].pos_x, tab_constru[z].pos_y - TUILE_HAUTEUR_ISO/2 + 1,
                                 tab_constru[z].pos_x, tab_constru[z].pos_y + TUILE_HAUTEUR_ISO/2 - 1, al_map_rgb(255, 0, 0));
-    }
+    }*/
+    al_draw_bitmap(tab_constru[z].icone, tab_constru[z].pos_x - TUILE_LARGEUR_ISO/2, tab_constru[z].pos_y - TUILE_HAUTEUR_ISO/2, 0);
 }
 
 
@@ -126,3 +120,16 @@ void draw_cases_centrale(Construction* tab_constru, int z) {
                                 tab_constru[z].pos_x, tab_constru[z].pos_y + TUILE_HAUTEUR_ISO/2 - 1, al_map_rgb(255, 0, 0));
     }
 }
+
+
+/*void affichage_temps(int* timer_secondes, int* timer_minutes, ALLEGRO_FONT* police, float x, float y, bool timer_2) {
+    if(timer_2) {
+        timer_secondes++;
+    }
+    if(*timer_secondes == 60) {
+        *timer_secondes = 0;
+        *timer_minutes++;
+    }
+    al_draw_textf(police, al_map_rgb(0, 0, 0), x, y, 0, "%d : %d", *timer_minutes, *timer_secondes);
+}*/
+

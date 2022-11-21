@@ -3,7 +3,10 @@
 
 #include "Affichage.h"
 #include "Initialisation.h"
+//#include "map.h"
+#include "Graphe.h"
 
 void jeuPrincipale(int* finDuJeu);
+int TrouverNumeroCase(int iCase, int jCase);
 
 #endif

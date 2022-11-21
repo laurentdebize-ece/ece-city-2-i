@@ -19,6 +19,7 @@ void initialiser(Cases tabPlateau[NB_CASES][NB_CASES],Bitmap tabBit[NB_MAX_BAT])
             tabPlateau[i][j].numeroCase = numero+1;
             tabPlateau[i][j].occupe = 0;
             tabPlateau[i][j].routeOccupe = 0;
+            tabPlateau[i][j].viable = 0;
             compteur++;
             numero++;
             tabPlateau[i][j].joueurSurCase = 0;

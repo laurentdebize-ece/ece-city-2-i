@@ -39,6 +39,11 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
     al_draw_bitmap(MapFond, X_DEPART, Y_DEPART,0);
     /// dessiner les carrés noir, le plateau
     drawLine(ligne, X_DEPART, Y_DEPART);
+    ALLEGRO_BITMAP *eau = NULL;
+    ALLEGRO_BITMAP *eclair = NULL;
+    ALLEGRO_BITMAP *construction = NULL;
+    ALLEGRO_BITMAP *route = NULL;
+    ALLEGRO_BITMAP *caserne = NULL;
 
 
     /// tracer les carrés rouges quand on cliques dessus (tracer les routes)
@@ -277,18 +282,35 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
         }
     }
 
-
+    al_init_image_addon();
+    eau = al_load_bitmap("../eau.png");
+    eclair = al_load_bitmap("../eclair.png");
+    construction = al_load_bitmap("../construction.png");
+    route = al_load_bitmap("../route.png");
+    caserne = al_load_bitmap("../caserne.png");
 
     /// draw le rectangle bleu pour avoir le bat en main
     al_draw_filled_rectangle(20,500, 70, 550, al_map_rgb(20,50,180));
+
     ///carre quitter mode bat
     al_draw_filled_rectangle(20,650, 70, 700, al_map_rgb(150,150,0));
     /// carre rouge pour les routes
     al_draw_filled_rectangle(20,400, 70, 450, al_map_rgb(100,0,0));
+
     /// Niveau -1
     al_draw_filled_rectangle(20,100, 70, 150, al_map_rgb(0,0,255));
+
     /// Niveau -2
     al_draw_filled_rectangle(20,200, 70, 250, al_map_rgb(255,255,0));
+
+
+   // al_draw_bitmap(construction, 20,500,0);
+    al_draw_bitmap(route,20,400,0);
+    al_draw_bitmap(eau, 20,100,0);
+    al_draw_bitmap(eclair,20,200,0);
+    al_draw_bitmap(caserne,20,650,0);
+    al_draw_bitmap(construction,20,500,0);
+    al_flip_display();
 
 
 
@@ -324,6 +346,7 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
         }
     }
 
+
     ///timer jeu complet
     al_draw_textf(police, al_map_rgb(0, 0, 0), 220, 20, 0, "%d s", al_get_timer_count(timer1sec));
     al_draw_textf(police, al_map_rgb(0, 0, 0), 180, 20, 0, "%d: ", minutes);
@@ -332,4 +355,10 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
     al_draw_bitmap(Habitant, 750, 10, 0);
     al_draw_textf(police, al_map_rgb(0, 0, 0), 800, 20, 0, ": %d ", *nbHabTotal);
     al_flip_display();
+
+    al_destroy_bitmap(eau);
+    al_destroy_bitmap(eclair);
+    al_destroy_bitmap(construction);
+    al_destroy_bitmap(route);
+    al_destroy_bitmap(caserne);
 }

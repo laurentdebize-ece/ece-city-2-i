@@ -13,32 +13,32 @@ void ajouterCompoConnexe(Sommet2** sommet, Cases tabPlateau[COLONNES][COLONNES],
     }
 }
 
-void Parcourir(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j, int compteurUsineEau, int compteurUsineElec){
+void Parcourir(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j, int compteurUsineEau, int compteurUsineElec, int numConnexeUsineEAu, int numConnexeUsineElec){
     Sommet2* temp = m;
     while (m != NULL){
-        //if(tabPlateau[i][j].)
-        /*if(m->typeHab == 1){
 
-            compteurUsineEau++;
-        }*/
         if(m->typeUsineEau == 1){
-            compteurUsineEau++;
+            compteurUsineEau = 1;
+            numConnexeUsineEAu = tabPlateau[m->i][m->j].numeroCompoConnexe;
         } else if(m->typeUsineElec == 1){
             compteurUsineElec = 1;
+            numConnexeUsineElec = tabPlateau[m->i][m->j].numeroCompoConnexe;
         }
+
         m = m->next;
     }
-    //printf("Compteur = %d\n", compteurUsineEau);
-    if(compteurUsineEau >= 1 && compteurUsineElec >= 1){
+    if(compteurUsineEau >= 1 && compteurUsineElec >= 1 && tabPlateau[i] && numConnexeUsineEAu == numConnexeUsineElec){
         while (temp != NULL){
-            tabPlateau[temp->i][temp->j].viable = 1;
-            //printf("%d %d\n", temp->i, temp->j);
+            if(tabPlateau[temp->i][temp->j].numeroCompoConnexe == numConnexeUsineElec) {
+                tabPlateau[temp->i][temp->j].viable = 1;
+            }
             temp = temp->next;
         }
     }
 }
 
 void SupprimerArete(Sommet2** sommet,Cases tabPlateau[COLONNES][COLONNES], int i, int j){
+    /// Sert a remplacer le type de la route devant une maison (elle passe de type route a type maison)
     Sommet2* temp = NULL;
     Sommet2* n = NULL;
     temp = (*sommet);
@@ -57,7 +57,7 @@ void afficher(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j){
     while (m != NULL){
         //if(tabPlateau[i][j].)
         if(m->typeRoutes == 1) {
-            printf("Routes : %d %d: %d (bat autour %d) prec : %d\n", m->i, m->j, m->numeroCase, m->tabMaisonAutourRoutes, m->sommetPrecedent);
+            printf("Routes : %d %d: %d\n", m->i, m->j, m->NumeroDelaRoutePose);
 
         }else if(m->typeHab == 1){
             printf("Maison : %d %d: %d (bat autour %d) prec : %d\n", m->i, m->j, m->numeroCase, m->tabMaisonAutourRoutes, m->sommetPrecedent);
@@ -71,7 +71,7 @@ void afficher(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j){
     printf("\n");
 }
 
-void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int numeroCase, int PremierSommet, int tabMarque[45*35], Cases tabPlateau[COLONNES][COLONNES], int* sommetPrec) {
+void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int numeroCase, int PremierSommet, int tabMarque[45*35], Cases tabPlateau[COLONNES][COLONNES], int* sommetPrec, int nbRoutesPose) {
     Sommet2 * temp = NULL;
     if(*Psommet2 == NULL){
         *Psommet2 = malloc(sizeof (Sommet2));
@@ -81,6 +81,7 @@ void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int nu
         *sommetPrec = numeroCase;
         (*Psommet2)->i = i;
         (*Psommet2)->j = j;
+        (*Psommet2)->NumeroDelaRoutePose = nbRoutesPose;
         (*Psommet2)->tabMaisonAutourRoutes = tabPlateau[i][j].tabMaisonAutourRoutes;
         (*Psommet2)->typeRoutes = tabPlateau[i][j].sommetDansLeGraphe;
         (*Psommet2)->typeHab = tabPlateau[i][j].sommetDansLeGrapheHab;
@@ -102,6 +103,7 @@ void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int nu
         temp->next->j = j;
         temp->next->typeRoutes = tabPlateau[i][j].sommetDansLeGraphe;
         temp->next->typeHab = tabPlateau[i][j].sommetDansLeGrapheHab;
+        temp->next->NumeroDelaRoutePose = nbRoutesPose;
         temp->next->typeUsineEau = tabPlateau[i][j].sommetDansLeGrapheUsineEau;
         temp->next->typeUsineElec = tabPlateau[i][j].sommetDansLeGrapheUsineElec;
         temp->next->tabMaisonAutourRoutes =tabPlateau[i][j].tabMaisonAutourRoutes;
@@ -111,17 +113,74 @@ void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int nu
     }
 }
 
+Sommet2 * TrierDansLeBonSensDeLaPose(Sommet2 * m){
+    Sommet2 * temp, *p;
+    int Pr;
+    int test;
+    if(m != NULL){
+
+        for (temp = m; temp->next != NULL; temp = temp->next) {
+            for (p = temp; p != NULL ; p = p->next) {
+                if(p->NumeroDelaRoutePose <= temp->NumeroDelaRoutePose){
+
+                    Pr = p->numeroCase;
+                    p->numeroCase = temp->numeroCase;
+                    temp->numeroCase = Pr;
+
+                    test = p->NumeroDelaRoutePose;
+                    p->NumeroDelaRoutePose = temp->NumeroDelaRoutePose;
+                    temp->NumeroDelaRoutePose = test;
+
+                    test = p->i;
+                    p->i = temp->i;
+                    temp->i = test;
+
+                    test = p->j;
+                    p->j = temp->j;
+                    temp->j = test;
+
+                    test = p->tabMaisonAutourRoutes;
+                    p->tabMaisonAutourRoutes = temp->tabMaisonAutourRoutes;
+                    temp->tabMaisonAutourRoutes = test;
+
+                    test = p->typeRoutes;
+                    p->typeRoutes = temp->typeRoutes;
+                    temp->typeRoutes = test;
+
+                    test = p->typeHab;
+                    p->typeHab = temp->typeHab;
+                    temp->typeHab = test;
+
+                    test = p->typeUsineEau;
+                    p->typeUsineEau = temp->typeUsineEau;
+                    temp->typeUsineEau = test;
+
+                    test = p->typeUsineElec;
+                    p->typeUsineElec = temp->typeUsineElec;
+                    temp->typeUsineElec = test;
+                }
+            }
+        }
+    }
+    return m;
+}
+
 Sommet2 * Trier(Sommet2 * m){
     Sommet2 * temp, *p;
     int Pr;
     int test;
     if(m != NULL){
+
         for (temp = m; temp->next != NULL; temp = temp->next) {
             for (p = temp; p != NULL ; p = p->next) {
                 if(p->numeroCase <= temp->numeroCase){
                     Pr = p->numeroCase;
                     p->numeroCase = temp->numeroCase;
                     temp->numeroCase = Pr;
+
+                    test = p->NumeroDelaRoutePose;
+                    p->NumeroDelaRoutePose = temp->NumeroDelaRoutePose;
+                    temp->NumeroDelaRoutePose = test;
 
                     test = p->i;
                     p->i = temp->i;

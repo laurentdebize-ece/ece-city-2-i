@@ -22,6 +22,7 @@ struct Arc {
     int j_sommet;
     int poids;
     int sommet;
+    int marque;
     struct Arc* arc_suivant;
 };
 
@@ -43,7 +44,9 @@ typedef struct Graphe {
 typedef struct {
     int occupe;
     int routeOccupe;
-    int occupBat;
+    int occupeBat;
+    int occupeUsineEau;
+    int occupeUsineElec;
     int type;
     int id_bat_pose;
     //pointeur personnage
@@ -53,6 +56,18 @@ typedef struct {
     int joueurSurCase;
     int viable;
     int valeurCompteurAuClic;
+    int tabMaisonAutourRoutesi[4];
+    int tabMaisonAutourRoutesj[4];
+    int tabMaisonAutourRoutes;
+    int sommetDansLeGraphe;
+    int sommetGrapheI;
+    int sommetGrapheJ;
+    int sommetDansLeGrapheHab;
+    int sommetDansLeGrapheUsineEau;
+    int sommetDansLeGrapheUsineElec;
+    int numeroCompoConnexe;
+    int numeroCaseSommetAdj[4];
+    int nbSommetAdj;
 }Cases;
 
 typedef struct {
@@ -83,11 +98,38 @@ typedef struct {
     bool viable;
 } Construction;
 
+typedef struct Som{
+    char nom [100];
+    struct Som* next;
+    float note;
+    int entier;
+    int numeroCase;
+    int i;
+    int j;
+    int tabMaisonAutourRoutes;
+    int typeRoutes;
+    int typeHab;
+    int typeUsineEau;
+    int typeUsineElec;
+    int sommetPrecedent;
+    int numeroSommet;
+    int numeroCompoConnexe;
+    int numeroCaseSommetAdj[4];
+    int nbSommetAdj;
+}Sommet2;
+
 typedef struct {
     int monnaie, nb_habitants, capa_eau, capa_elec;
 } Donnees_globales;
 
 Graphe* creerGraphe(int ordre);
-pSommet* CreerArete(pSommet* sommet, int i, int j, int i_bis, int j_bis, int numeroCase, int numeroCaseARelie);
+void ajouterCompoConnexe(Sommet2** sommet, Cases tabPlateau[COLONNES][COLONNES], int i, int j);
+void Parcourir(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j,int compteurUsineEau, int compteurUsineElec);
+void SupprimerArete(Sommet2** sommet,Cases tabPlateau[COLONNES][COLONNES], int i, int j);
+void afficher(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j);
+void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int numeroCase, int PremierSommet, int tabMarque[45*35], Cases tabPlateau[COLONNES][COLONNES], int* sommetPrec);
+pSommet* CreerArete(pSommet* sommet, int i, int j, int i_bis, int j_bis, int numeroCase,  int premierSommet, int tabMarque[45*35]);
+Sommet2 * Trier(Sommet2 * m);
+//int TrouverNumeroCase(int iCase, int jCase);
 void check_relier_cases(Graphe* g, int i_constant, int j_constant, int i , int j, int i_bis, int j_bis, bool pose_de_route, Construction* tab_constru, Cases tab[COLONNES][COLONNES]);
 #endif

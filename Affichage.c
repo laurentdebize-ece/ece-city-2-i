@@ -9,11 +9,12 @@ void drawLine(Ligne lignes, int x, int y) {
     }
 }
 
-bool CasesViableAutourDesHabitation(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int k){
+bool CasesViableAutourDesHabitation(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int i, int j){
     bool HabViable = FALSE;
-    for (int i = tabBit[k].i; i < tabBit[k].i+3; ++i) {
-        for (int j = tabBit[k].j - 2; j < tabBit[k].j+1; ++j) {
-            if(tabPlateau[i][j].viable == 1){
+    for (int k = i-1; k <= i+NB_Cases_Place_ConstruX+1; ++k) {
+        for (int l = j - NB_Cases_Place_ConstruY - 1; l <= j + 1; ++l) {
+            if(tabPlateau[k][l].routeOccupe == 1){
+
                 HabViable = TRUE;
             }
         }
@@ -47,7 +48,7 @@ bool incendie(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], i
     return Incendie;
 }
 
-void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, Ligne ligne, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal,int* ecefloos ,bool clickCarreBleu, bool affichageRoute, bool affichageEau, bool affichageElec,bool choixUsineElec, bool choixUsineEau, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_FONT* policePetite,ALLEGRO_BITMAP* RouteDroite, ALLEGRO_BITMAP* RouteDroite2, ALLEGRO_BITMAP* Tournant, ALLEGRO_BITMAP* Tournant2, ALLEGRO_BITMAP* Tournant3, ALLEGRO_BITMAP* Tournant4, ALLEGRO_BITMAP* DoubleTournant, ALLEGRO_BITMAP* DoubleTournant2, ALLEGRO_BITMAP* DoubleTournant3, ALLEGRO_BITMAP* DoubleTournant4, ALLEGRO_BITMAP* Croisement, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* Maison1, ALLEGRO_BITMAP* Maison2, ALLEGRO_BITMAP* Maison3, ALLEGRO_BITMAP* Maison4, ALLEGRO_BITMAP* MapFond, ALLEGRO_BITMAP* NuageFond, ALLEGRO_BITMAP* Ruine, ALLEGRO_BITMAP* Immeuble, ALLEGRO_BITMAP* GratteCiel, ALLEGRO_BITMAP* Cabane, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau){
+void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, Ligne ligne, int nbNombreBatPose,int nbNombreUsineEauPose,int nbNombreUsineElecPose, int valeurSourisX, int valeurSourisY, int minutes,int nbHabTotal,int* ecefloos ,bool clickCarreBleu, bool affichageRoute, bool affichageEau, bool affichageElec,bool choixUsineElec, bool choixUsineEau,bool RouteColleBat, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_FONT* policePetite,ALLEGRO_BITMAP* RouteDroite, ALLEGRO_BITMAP* RouteDroite2, ALLEGRO_BITMAP* Tournant, ALLEGRO_BITMAP* Tournant2, ALLEGRO_BITMAP* Tournant3, ALLEGRO_BITMAP* Tournant4, ALLEGRO_BITMAP* DoubleTournant, ALLEGRO_BITMAP* DoubleTournant2, ALLEGRO_BITMAP* DoubleTournant3, ALLEGRO_BITMAP* DoubleTournant4, ALLEGRO_BITMAP* Croisement, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* Maison1, ALLEGRO_BITMAP* Maison2, ALLEGRO_BITMAP* Maison3, ALLEGRO_BITMAP* Maison4, ALLEGRO_BITMAP* MapFond, ALLEGRO_BITMAP* NuageFond, ALLEGRO_BITMAP* Ruine, ALLEGRO_BITMAP* Immeuble, ALLEGRO_BITMAP* GratteCiel, ALLEGRO_BITMAP* Cabane, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau, ALLEGRO_BITMAP* CroixRouge){
     //al_clear_to_color(al_map_rgb(255,255,255));
 
     al_draw_bitmap(NuageFond, 0,0,0);
@@ -200,117 +201,256 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
 
 
     /// Draw la bitmap de la maison
-    for(int k = 0; k < nbNombreBatPose; k++){
-        if(tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 0){
-            al_draw_bitmap(TerrainVague, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-            if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)){
-                al_draw_text(policePetite, al_map_rgb(255,0,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "-1000");
-                al_draw_bitmap(PieceMonnaie,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
-            }
-        }
-        if(tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 1){
-            //Incendie = incendie(tabPlateau, tabBit, k);
-            if(tabBit[k].incendie == FALSE) {
-                if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                    al_draw_bitmap(Cabane, tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 10,tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                    al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 +HAUTEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-                }else{
-                    al_draw_bitmap(Cabane, tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 10,tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+        for (int k = 0; k < nbNombreBatPose; k++) {
+            if (CasesViableAutourDesHabitation(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 1) {
+                if (tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 0) {
+                    al_draw_bitmap(TerrainVague, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                   tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                    //printf(" au clic : %d\n", tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1);
+                    //printf("  timer : %d\n", al_get_timer_count(timer));
+                    if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)) {
+                        al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "-1000");
+                        al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
+                    }
                 }
+                if (tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 1) {
+                    //Incendie = incendie(tabPlateau, tabBit, k);
+                    if (tabBit[k].incendie == FALSE) {
+                        if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                            al_draw_bitmap(Cabane, tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 10,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                            al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                     al_map_rgba(255, 0, 0, 30));
+                        } else {
+                            al_draw_bitmap(Cabane, tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 10,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        }
 
-                if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)){
-                    al_draw_text(policePetite, al_map_rgb(0,255,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 20, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "+10");
-                    al_draw_bitmap(Habitant,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
+                        if ((al_get_timer_count(timer)) <=
+                            (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)) {
+                            al_draw_text(policePetite, al_map_rgb(0, 255, 0),
+                                         tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 20,
+                                         tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "+10");
+                            al_draw_bitmap(Habitant, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
+                        }
+                    } else {
+                        al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                 al_map_rgb(255, 0, 0));
+                        if ((al_get_timer_count(timer)) <=
+                            (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)) {
+                            al_draw_text(policePetite, al_map_rgb(0, 255, 0),
+                                         tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 20,
+                                         tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "Inencendie");
+                        }
+                        tabBit[k].changementBatBloque = 1;
+                    }
                 }
-            }else{
-                al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1+HAUTEUR_CASE , tabPlateau[tabBit[k].i][tabBit[k].j].x1 +3* LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 -2*HAUTEUR_CASE, al_map_rgb(255,0,0));
-                if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)){
-                    al_draw_text(policePetite, al_map_rgb(0,255,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1-20, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "Inencendie");
+                if (tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 2) {
+                    if (tabBit[k].chance1sur4 == 0) {
+                        if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                            al_draw_bitmap(Maison1, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                            al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                     al_map_rgba(255, 0, 0, 30));
+                        } else {
+                            al_draw_bitmap(Maison1, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        }
+                    } else if (tabBit[k].chance1sur4 == 1) {
+                        if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                            al_draw_bitmap(Maison2, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                            al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                     al_map_rgba(255, 0, 0, 30));
+                        } else {
+                            al_draw_bitmap(Maison2, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        }
+                    } else if (tabBit[k].chance1sur4 == 2) {
+                        if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                            al_draw_bitmap(Maison3, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                            al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                     al_map_rgba(255, 0, 0, 30));
+                        } else {
+                            al_draw_bitmap(Maison3, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        }
+                    } else if (tabBit[k].chance1sur4 == 3) {
+                        if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                            al_draw_bitmap(Maison4, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                            al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                     al_map_rgba(255, 0, 0, 30));
+                        } else {
+                            al_draw_bitmap(Maison4, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                           tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        }
+                    }
+                    if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)) {
+                        al_draw_text(policePetite, al_map_rgb(0, 255, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 20,
+                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "+50");
+                        al_draw_bitmap(Habitant, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
+                    }
                 }
-                tabBit[k].changementBatBloque = 1;
-            }
-        }
-        if(tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 2){
-            if(tabBit[k].chance1sur4 == 0) {
-                if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                    al_draw_bitmap(Maison1, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                    al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 +HAUTEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-                }else{
-                    al_draw_bitmap(Maison1, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                }
-            } else if(tabBit[k].chance1sur4 == 1) {
-                if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                    al_draw_bitmap(Maison2, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                    al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-                }else{
-                    al_draw_bitmap(Maison2, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                }
-            } else if(tabBit[k].chance1sur4 == 2) {
-                if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                    al_draw_bitmap(Maison3, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                    al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1+HAUTEUR_CASE , tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-                }else{
-                    al_draw_bitmap(Maison3, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                }
-            }else if(tabBit[k].chance1sur4 == 3) {
-                if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                    al_draw_bitmap(Maison4, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                    al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-                }else{
-                    al_draw_bitmap(Maison4, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                }
-            }
-            if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)){
-                al_draw_text(policePetite, al_map_rgb(0,255,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 20, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "+50");
-                al_draw_bitmap(Habitant,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
-            }
-        }
-        if(tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 3){
-            if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                al_draw_bitmap(Immeuble, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-                al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-            }else{
-                al_draw_bitmap(Immeuble, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
-            }
+                if (tabBit[k].batPose == 1 && tabBit[k].changemetnBat == 3) {
+                    if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                        al_draw_bitmap(Immeuble, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                 al_map_rgba(255, 0, 0, 30));
+                    } else {
+                        al_draw_bitmap(Immeuble, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE, 0);
+                    }
 
 
-            if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)){
-                al_draw_text(policePetite, al_map_rgb(0,255,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 10, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "+100");
-                al_draw_bitmap(Habitant,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
-            }
-        }
-        if(tabBit[k].batPose == 1 && tabBit[k].changemetnBat >= 4){
-            if(CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0){
-                al_draw_bitmap(GratteCiel, tabPlateau[tabBit[k].i][tabBit[k].j].x1-2, tabPlateau[tabBit[k].i][tabBit[k].j].y1  - 3 * HAUTEUR_CASE-6, 0);
-                al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3*LARGEUR_CASE, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2*HAUTEUR_CASE,al_map_rgba(255,0,0,30));
-            }else{
-                al_draw_bitmap(GratteCiel, tabPlateau[tabBit[k].i][tabBit[k].j].x1-2, tabPlateau[tabBit[k].i][tabBit[k].j].y1  - 3 * HAUTEUR_CASE-6, 0);
-            }
+                    if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1)) {
+                        al_draw_text(policePetite, al_map_rgb(0, 255, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 10,
+                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 60, 0, "+100");
+                        al_draw_bitmap(Habitant, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 70, 0);
+                    }
+                }
+                if (tabBit[k].batPose == 1 && tabBit[k].changemetnBat >= 4) {
+                    if (CasesViableAutourDesHabitationBis(tabPlateau, tabBit, tabBit[k].i, tabBit[k].j) == 0) {
+                        al_draw_bitmap(GratteCiel, tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 2,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE - 6, 0);
+                        al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                 al_map_rgba(255, 0, 0, 30));
+                    } else {
+                        al_draw_bitmap(GratteCiel, tabPlateau[tabBit[k].i][tabBit[k].j].x1 - 2,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE - 6, 0);
+                    }
 
 
-            if(affichageElec == TRUE || affichageEau == TRUE) {
-                al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,al_map_rgba(0, 0, 0, 150));
+                    if (affichageElec == TRUE || affichageEau == TRUE) {
+                        al_draw_filled_rectangle(tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 + HAUTEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 3 * LARGEUR_CASE,
+                                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 2 * HAUTEUR_CASE,
+                                                 al_map_rgba(0, 0, 0, 150));
+                    }
+                    if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                        tabBit[k].changemetnBat == 4) {
+                        al_draw_text(policePetite, al_map_rgb(0, 255, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "+1000");
+
+                        al_draw_bitmap(Habitant, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+                    }
+                }
+                /*if (tabBit[k].UsineEauPose == 1) {
+                    al_draw_bitmap(ChateauEau, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                   tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE, 0);
+                    if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                        (tabBit[k].changemetnBat == 0)) {
+                        al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "-5000");
+                        al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+                    }
+                }
+                if (tabBit[k].UsineElecPose == 1) {
+                    al_draw_bitmap(CentralElectrique, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                   tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE, 0);
+                    if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                        (tabBit[k].changemetnBat == 0)) {
+                        al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                     tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "-5000");
+                        al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                       tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+                    }
+                }*/
+            } else {
+                for (int l = 0; l < nbNombreBatPose; l++) {
+                    if (tabBit[l].batPose == 1 && tabBit[l].changemetnBat == 0) {
+                        al_draw_bitmap(TerrainVague, tabPlateau[tabBit[l].i][tabBit[l].j].x1,
+                                       tabPlateau[tabBit[l].i][tabBit[l].j].y1 - 2 * HAUTEUR_CASE, 0);
+                        al_draw_bitmap(CroixRouge, tabPlateau[tabBit[l].i][tabBit[l].j].x1 + LARGEUR_CASE,
+                                       tabPlateau[tabBit[l].i][tabBit[l].j].y1 - HAUTEUR_CASE, 0);
+                    }
+                }
             }
-            if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) && tabBit[k].changemetnBat == 4){
-                al_draw_text(policePetite, al_map_rgb(0,255,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "+1000");
-                al_draw_bitmap(Habitant,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+            if (tabBit[k].UsineEauPose == 1) {
+                al_draw_bitmap(ChateauEau, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                               tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE, 0);
+                if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                    (tabBit[k].changemetnBat == 0)) {
+                    al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "-5000");
+                    al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                   tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+                }
+            }
+            if (tabBit[k].UsineElecPose == 1) {
+                al_draw_bitmap(CentralElectrique, tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                               tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE, 0);
+                if ((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                    (tabBit[k].changemetnBat == 0)) {
+                    al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[k].i][tabBit[k].j].x1,
+                                 tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "-5000");
+                    al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70,
+                                   tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+                }
             }
         }
-        if(tabBit[k].UsineEauPose == 1){
-            al_draw_bitmap(ChateauEau, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE, 0);
-            if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) && (tabBit[k].changemetnBat == 0)){
-                al_draw_text(policePetite, al_map_rgb(255,0,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "-5000");
-                al_draw_bitmap(PieceMonnaie,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+
+        /*for (int i = 0; i < nbNombreUsineEauPose; ++i) {
+            if (tabBit[i].UsineEauPose == 1) {
+                al_draw_bitmap(ChateauEau, tabPlateau[tabBit[i].i][tabBit[i].j].x1,
+                               tabPlateau[tabBit[i].i][tabBit[i].j].y1 - 3 * HAUTEUR_CASE, 0);
+                if ((al_get_timer_count(timer)) <= (tabBit[i].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                    (tabBit[i].changemetnBat == 0)) {
+                    al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[i].i][tabBit[i].j].x1,
+                                 tabPlateau[tabBit[i].i][tabBit[i].j].y1 - 90, 0, "-5000");
+                    al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[i].i][tabBit[i].j].x1 + 70,
+                                   tabPlateau[tabBit[i].i][tabBit[i].j].y1 - 100, 0);
+                }
             }
         }
-        if(tabBit[k].UsineElecPose == 1){
-            al_draw_bitmap(CentralElectrique, tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 3 * HAUTEUR_CASE, 0);
-            if((al_get_timer_count(timer)) <= (tabBit[k].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) && (tabBit[k].changemetnBat == 0)){
-                al_draw_text(policePetite, al_map_rgb(255,0,0), tabPlateau[tabBit[k].i][tabBit[k].j].x1, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 90, 0, "-5000");
-                al_draw_bitmap(PieceMonnaie,tabPlateau[tabBit[k].i][tabBit[k].j].x1 + 70, tabPlateau[tabBit[k].i][tabBit[k].j].y1 - 100, 0);
+        for (int i = 0; i < nbNombreUsineElecPose; ++i) {
+            if (tabBit[i].UsineElecPose == 1) {
+                al_draw_bitmap(CentralElectrique, tabPlateau[tabBit[i].i][tabBit[i].j].x1,
+                               tabPlateau[tabBit[i].i][tabBit[i].j].y1 - 3 * HAUTEUR_CASE, 0);
+                if ((al_get_timer_count(timer)) <= (tabBit[i].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) &&
+                    (tabBit[i].changemetnBat == 0)) {
+                    al_draw_text(policePetite, al_map_rgb(255, 0, 0), tabPlateau[tabBit[i].i][tabBit[i].j].x1,
+                                 tabPlateau[tabBit[i].i][tabBit[i].j].y1 - 90, 0, "-5000");
+                    al_draw_bitmap(PieceMonnaie, tabPlateau[tabBit[i].i][tabBit[i].j].x1 + 70,
+                                   tabPlateau[tabBit[i].i][tabBit[i].j].y1 - 100, 0);
+                }
             }
-        }
-    }
+        }*/
+
 
 
 
@@ -351,21 +491,23 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
     /// timer 15sec
 
     for (int i = 0; i < nbNombreBatPose; ++i) {
-        if((al_get_timer_count(timer)) <= (tabBit[i].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION + 1) && (al_get_timer_count(timer)) >= (tabBit[i].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION - 1)) {
-            tabBit[i].valeurCompteurAuClic = al_get_timer_count(timer);
-            tabBit[i].timerPasAfficherSansArret = al_get_timer_count(timer);
-            if(tabBit[i].changemetnBat <= 4) {
-                if(tabBit[i].changementBatBloque == 0) {
-                    tabBit[i].changemetnBat = tabBit[i].changemetnBat + 1;
+        if(CasesViableAutourDesHabitation(tabPlateau, tabBit, tabBit[i].i, tabBit[i].j) == 1) {
+            if ((al_get_timer_count(timer)) <= (tabBit[i].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION2 + 1) && (al_get_timer_count(timer)) >= (tabBit[i].valeurCompteurAuClic + TEMPS_DE_CONSTRUCTION2 - 1)) {
+                tabBit[i].valeurCompteurAuClic = al_get_timer_count(timer);
+                tabBit[i].timerPasAfficherSansArret = al_get_timer_count(timer);
+                if (tabBit[i].changemetnBat <= 4) {
+                    if (tabBit[i].changementBatBloque == 0) {
+                        tabBit[i].changemetnBat = tabBit[i].changemetnBat + 1;
+                    }
+                    if (tabBit[i].changemetnBat == 1 && tabBit[i].changementBatBloque == 0) {
+                        tabBit[i].incendie = incendie(tabPlateau, tabBit, i);
+                    }
+                    if (tabBit[i].changementBatBloque == 0) {
+                        //*nbHabTotal = *nbHabTotal + tabBit[tabBit[i].changemetnBat].nbHabitant;
+                    }
                 }
-                if(tabBit[i].changemetnBat == 1 && tabBit[i].changementBatBloque == 0){
-                    tabBit[i].incendie = incendie(tabPlateau, tabBit, i);
-                }
-                if(tabBit[i].changementBatBloque == 0) {
-                    //*nbHabTotal = *nbHabTotal + tabBit[tabBit[i].changemetnBat].nbHabitant;
-                }
+                tabBit[i].empecherDeRentrerPlusieursFoisDAnsLaBoucle = 1;
             }
-            tabBit[i].empecherDeRentrerPlusieursFoisDAnsLaBoucle = 1;
         }
     }
 
@@ -375,6 +517,6 @@ void dessinerLeJeu(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
     al_draw_bitmap(PieceMonnaie, 1200, 10, 0);
     al_draw_textf(police, al_map_rgb(0, 0, 0), 1255, 20, 0, ": %d ", *ecefloos);
     al_draw_bitmap(Habitant, 750, 10, 0);
-    al_draw_textf(police, al_map_rgb(0, 0, 0), 800, 20, 0, ": %d ", *nbHabTotal);
+    al_draw_textf(police, al_map_rgb(0, 0, 0), 800, 20, 0, ": %d ", nbHabTotal);
     al_flip_display();
 }

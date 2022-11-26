@@ -6,6 +6,253 @@ int TrouverNumeroCase(int iCase, int jCase){
     return numeroCase;
 }
 
+void ComposanteConnexeDuGraphe(Cases tabPlateau[NB_CASES][NB_CASES], Sommet2* Psommet2,bool compteurUsineEau,bool compteurUsineElec, int numeroConneDeUsineEau, int numeroConnexeDeUsineElec){
+    for (int i = 0; i < NB_CASES; ++i) {
+        for (int j = 0; j < NB_CASES; ++j) {
+            if(tabPlateau[i][j].routeOccupe == 1) {
+                if (tabPlateau[i + 1][j].routeOccupe == 1 && tabPlateau[i + 1][j].numeroCompoConnexe > 0 && tabPlateau[i + 1][j].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
+                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i + 1][j].numeroCompoConnexe;
+                } else if (tabPlateau[i - 1][j].routeOccupe == 1 && tabPlateau[i - 1][j].numeroCompoConnexe > 0 && tabPlateau[i - 1][j].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
+                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i - 1][j].numeroCompoConnexe;
+                } else if (tabPlateau[i][j + 1].routeOccupe == 1 && tabPlateau[i][j+1].numeroCompoConnexe > 0 && tabPlateau[i][j+1].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
+                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i][j + 1].numeroCompoConnexe;
+                } else if (tabPlateau[i][j - 1].routeOccupe == 1 && tabPlateau[i][j-1].numeroCompoConnexe > 0&& tabPlateau[i][j-1].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
+                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i][j - 1].numeroCompoConnexe;
+                }
+                Parcourir(Psommet2, tabPlateau, i, j, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
+            }
+        }
+    }
+}
+
+void SourisSurCase(Cases tabPlateau[NB_CASES][NB_CASES], int* valeurSourisX, int* valeurSourisY, int* sourisDessusX, int* sourisDessusY, ALLEGRO_EVENT event){
+    for (int i = 0; i < NB_CASES; ++i) {
+        for (int j = 0; j < NB_CASESY; ++j) {
+
+            *valeurSourisX = event.mouse.x;
+            *valeurSourisY = event.mouse.y;
+            if(event.mouse.x > tabPlateau[i][j].x1 && event.mouse.x < tabPlateau[i][j].x1 + LARGEUR_CASE && event.mouse.y > tabPlateau[i][j].y1 && event.mouse.y < tabPlateau[i][j].y1 + HAUTEUR_CASE){
+                *sourisDessusX = i;
+                *sourisDessusY = j;
+            }
+        }
+    }
+}
+
+void RegarderCaseAutour(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int comptbitmap1, int* nbBatAutourDesRoutes, ALLEGRO_TIMER* timer, int i, int j){
+    if(i+1 < 45) {
+        //tabPlateau[i + 1][j].viable = 1;
+        if(tabPlateau[i+1][j].occupeBat == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            tabPlateau[i][j].sommetDansLeGrapheHab = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i+1;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i+1][j].occupeUsineEau == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i+1;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i+1][j].occupeUsineElec == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i+1;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+
+    }
+    if(i-1 >= 0) {
+        //tabPlateau[i - 1][j].viable = 1;
+        if(tabPlateau[i-1][j].occupeBat == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            tabPlateau[i][j].sommetDansLeGrapheHab = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i-1;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i-1][j].occupeUsineEau == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i-1;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i-1][j].occupeUsineElec == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i-1;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+    }
+    if(j+1 < 45) {
+        //tabPlateau[i][j + 1].viable = 1;
+        if(tabPlateau[i][j+1].occupeBat == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            tabPlateau[i][j].sommetDansLeGrapheHab = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j+1;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i][j+1].occupeUsineEau == 1){
+            //printf("O\n");
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            // tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j+1;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i][j+1].occupeUsineElec == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j+1;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+    }
+    if(j-1 >= 0) {
+        //tabPlateau[i][j - 1].viable = 1;
+        if(tabPlateau[i][j-1].occupeBat == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            tabPlateau[i][j].sommetDansLeGrapheHab = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j-1;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i][j-1].occupeUsineEau == 1){
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j-1;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+        if(tabPlateau[i][j-1].occupeUsineElec == 1){
+            //printf("Elec\n");
+            tabPlateau[i][j].sommetDansLeGraphe = 1;
+            //tabPlateau[i][j].sommetDansLeGrapheHab = 0;
+            //tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
+            tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
+            tabPlateau[i][j].tabMaisonAutourRoutesi[*nbBatAutourDesRoutes] = i;
+            tabPlateau[i][j].tabMaisonAutourRoutesj[*nbBatAutourDesRoutes] = j-1;
+            tabPlateau[i][j].tabMaisonAutourRoutes++;
+            *nbBatAutourDesRoutes = *nbBatAutourDesRoutes + 1;
+        }
+    }
+}
+
+void choixModes(ALLEGRO_EVENT event, bool* clickCarreBleu, bool* choixCarreRoute, bool* affichageElec, bool* affichageEau, bool* affichageRoute, bool* choixUsineEau, bool* choixUsineElec, ALLEGRO_FONT* police){
+    /// mode bat
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 500 && event.mouse.y < 550){
+        *clickCarreBleu = TRUE;
+        *choixCarreRoute = FALSE;
+        *affichageElec = FALSE;
+        *affichageEau = FALSE;
+        *affichageRoute = TRUE;
+        *choixUsineEau = FALSE,
+        *choixUsineElec = FALSE;
+    }
+    /// Quitter le mode choix des bat et routes
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 700 && event.mouse.y < 750){
+        *clickCarreBleu = FALSE;
+        *choixCarreRoute = FALSE;
+        *affichageElec = FALSE;
+        *affichageEau = FALSE;
+        *affichageRoute = TRUE;
+        *choixUsineEau = FALSE,
+        *choixUsineElec = FALSE;
+    }
+    /// mode route
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 400 && event.mouse.y < 450){
+        *choixCarreRoute = TRUE;
+        *affichageRoute = TRUE;
+        *clickCarreBleu = FALSE;
+        *affichageElec = FALSE;
+        *affichageEau = FALSE;
+        *choixUsineEau = FALSE,
+        *choixUsineElec = FALSE;
+    }
+    /// choix carre eau vert
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 570 && event.mouse.y < 620){
+        *choixCarreRoute = FALSE;
+        *affichageRoute = TRUE;
+        *clickCarreBleu = FALSE;
+        *affichageElec = FALSE;
+        *affichageEau = FALSE;
+        *choixUsineEau = TRUE;
+        *choixUsineElec = FALSE;
+    }
+    /// choix carre ele noir
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 630 && event.mouse.y < 680){
+        *choixCarreRoute = FALSE;
+        *affichageRoute = TRUE;
+        *clickCarreBleu = FALSE;
+        *affichageElec = FALSE;
+        *affichageEau = FALSE;
+        *choixUsineEau = FALSE,
+        *choixUsineElec = TRUE;
+    }
+    /// Mode ChateauEau
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 100 && event.mouse.y < 150){
+       *affichageRoute = FALSE;
+       *affichageElec = FALSE;
+       *affichageEau = TRUE;
+       *choixUsineEau = FALSE,
+       *choixUsineElec = FALSE;
+       al_draw_text(police, al_map_rgb(0,0,0), 100, 120, 0, "Niveau -1");
+    }
+    /// ModeCentralElec
+    if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 200 && event.mouse.y < 250){
+        *affichageRoute = FALSE;
+        *affichageElec = TRUE;
+        *affichageEau = FALSE;
+        *choixUsineEau = FALSE,
+        *choixUsineElec = FALSE;
+        al_draw_text(police, al_map_rgb(0,0,0), 100, 220, 0, "Niveau -2");
+    }
+}
+
 
 void jeuPrincipale(int* finDuJeu) {
 
@@ -52,7 +299,7 @@ void jeuPrincipale(int* finDuJeu) {
     int nombreRoutePose = 0;
     int numeroConnexeDeUsineElec = 0;
     int numeroConneDeUsineEau = 0;
-    int numChateau = 0;
+
     bool clickCarreBleu = FALSE;
     bool choixCarreRoute = FALSE;
     bool impossiblePlacerBat = FALSE;
@@ -112,28 +359,6 @@ void jeuPrincipale(int* finDuJeu) {
     ALLEGRO_FONT* police = NULL;
     ALLEGRO_FONT* policePetite = NULL;
 
-    /*
-
-    Repere repere_grille;
-
-    Donnees_globales mairie;
-
-    Graphe* graphe = creerGraphe(LIGNES*COLONNES);
-
-
-    repere_grille.O.x = DEBUT_X;
-    repere_grille.O.y = DEBUT_Y;
-
-    repere_grille.I.x = DEBUT_X + TUILE_LARGEUR_ISO/2;
-    repere_grille.I.y = DEBUT_Y + TUILE_HAUTEUR_ISO/2;
-
-    repere_grille.J.x = DEBUT_X - TUILE_LARGEUR_ISO/2;
-    repere_grille.J.y = DEBUT_Y + TUILE_HAUTEUR_ISO/2;
-
-    init_mairie(&mairie);
-
-
-    ALLEGRO_TIMER* temps_cycle = NULL;*/
 
 
 
@@ -260,174 +485,21 @@ void jeuPrincipale(int* finDuJeu) {
                                         eceFloos = eceFloos - 10;
                                         tabPlateau[i][j].valeurCompteurAuClic = al_get_timer_count(timer);
                                         tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                        if(i+1 < 45) {
-                                            //tabPlateau[i + 1][j].viable = 1;
-                                            if(tabPlateau[i+1][j].occupeBat == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i+1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i+1][j].occupeUsineEau == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i+1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i+1][j].occupeUsineElec == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i+1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                            }
 
-                                        }
-                                        if(i-1 >= 0) {
-                                            //tabPlateau[i - 1][j].viable = 1;
-                                            if(tabPlateau[i-1][j].occupeBat == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i-1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i-1][j].occupeUsineEau == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i-1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                                (Psommet2)->numeroChateau = numChateau++;
-                                            }
-                                            if(tabPlateau[i-1][j].occupeUsineElec == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i-1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
+                                        RegarderCaseAutour(tabPlateau, tabBit, comptbitmap1, &nbBatAutourDesRoutes, timer, i, j);
 
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                        }
-                                        if(j+1 < 45) {
-                                            //tabPlateau[i][j + 1].viable = 1;
-                                            if(tabPlateau[i][j+1].occupeBat == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j+1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i][j+1].occupeUsineEau == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j+1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i][j+1].occupeUsineElec == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j+1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                        }
-                                        if(j-1 >= 0) {
-                                            //tabPlateau[i][j - 1].viable = 1;
-                                            if(tabPlateau[i][j-1].occupeBat == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j-1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i][j-1].occupeUsineEau == 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 0;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j-1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                            }
-                                            if(tabPlateau[i][j-1].occupeUsineElec== 1){
-                                                tabPlateau[i][j].sommetDansLeGraphe = 1;
-                                                tabPlateau[i][j].sommetDansLeGrapheHab = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineEau = 0;
-                                                tabPlateau[i][j].sommetDansLeGrapheUsineElec = 1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesi[nbBatAutourDesRoutes] = i;
-                                                tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j-1;
-                                                tabPlateau[i][j].tabMaisonAutourRoutes++;
-                                                nbBatAutourDesRoutes++;
-                                            }
 
-                                        }
                                         /// Attente
                                         if(tabPlateau[i+1][j].routeOccupe == 0 && tabPlateau[i-1][j].routeOccupe == 0 && tabPlateau[i][j+1].routeOccupe == 0 && tabPlateau[i][j-1].routeOccupe == 0){
                                             numCompoConnexe++;
                                             tabPlateau[i][j].numeroCompoConnexe = numCompoConnexe;
                                         }
-                                        /*if (tabPlateau[i + 1][j].routeOccupe == 1) {
-                                            tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i+1][j].numeroCompoConnexe;
-                                        }else if (tabPlateau[i - 1][j].routeOccupe == 1) {
-                                             tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i-1][j].numeroCompoConnexe;
-                                        }else if (tabPlateau[i][j + 1].routeOccupe == 1) {
-                                            tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i][j+1].numeroCompoConnexe;
-                                        }else if (tabPlateau[i][j - 1].routeOccupe == 1) {
-                                            tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i][j-1].numeroCompoConnexe;
-                                        }else if (tabPlateau[i + 1][j].routeOccupe == 1 && tabPlateau[i - 1][j].routeOccupe == 1){
-                                            tabPlateau[i][j].numeroCompoConnexe = 1;
-                                        }else if (tabPlateau[i][j+1].routeOccupe == 1 && tabPlateau[i][j-1].routeOccupe == 1){
-                                            tabPlateau[i][j].numeroCompoConnexe = 1;
-                                        }*/
                                         ///
                                         tabPlateau[i][j].sommetGrapheI = i;
                                         tabPlateau[i][j].sommetGrapheJ = j;
-                                        if(tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGraphe == 1 /*|| tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGrapheHab == 1*/) {
+
+                                        if(tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGraphe >= 1 /*|| tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGrapheHab == 1*/) {
                                             CreerArete2(&Psommet2, tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose);
-                                            //Psommet2 = Trier(Psommet2);
-                                            //SupprimerArete(&Psommet2,tabPlateau, i, j);
-                                            //Psommet2 = TrierDansLeBonSensDeLaPose(Psommet2);
-                                            //Parcourir(Psommet2, tabPlateau, i, j, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
-                                            //afficher(Psommet2, tabPlateau, i, j);
                                         }
                                     }
                                     if(clickCarreBleu == TRUE){
@@ -467,14 +539,10 @@ void jeuPrincipale(int* finDuJeu) {
                                                     if(tabPlateau[k][l].routeOccupe == 1){
                                                         ///bool a true
                                                         RouteColleBat = TRUE;
-                                                        //printf("gg");
-                                                        //tabBit[comptbitmap1].valeurCompteurAuClic = al_get_timer_count(timer);
-                                                        //printf("%d\n", tabBit[comptbitmap1].valeurCompteurAuClic);
+
                                                         if ((k == i-1) && (l != j - NB_Cases_Place_ConstruY-1) && (l != j+1)){
                                                             tabPlateau[k][l].sommetDansLeGrapheHab = 1;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
                                                             /*if(tabPlateau[k][l].viable == 1){
@@ -483,47 +551,31 @@ void jeuPrincipale(int* finDuJeu) {
                                                         }
                                                         if ((l == j - NB_Cases_Place_ConstruY-1) && (k != i-1) && (k != i+NB_Cases_Place_ConstruX+1)){
                                                             tabPlateau[k][l].sommetDansLeGrapheHab = 1;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
-                                                            /*if(tabPlateau[k][l].viable == 1){
-                                                                HabiViable = TRUE;
-                                                            }*/
+
                                                         }
                                                         if ((l == j+1) && (k != i-1) && (k != i+NB_Cases_Place_ConstruX+1)){
 
                                                             tabPlateau[k][l].sommetDansLeGrapheHab = 1;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
-                                                            /*if(tabPlateau[k][l].viable == 1){
-                                                                HabiViable = TRUE;
-                                                            }*/
+
                                                         }
                                                         if ((k == i+NB_Cases_Place_ConstruX+1) && (l != j - NB_Cases_Place_ConstruY-1) && (l != j+1)){
 
                                                             tabPlateau[k][l].sommetDansLeGrapheHab = 1;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
-                                                            /*if(tabPlateau[k][l].viable == 1){
-                                                                HabiViable = TRUE;
-                                                            }*/
+
                                                         }
                                                         tabPlateau[k][l].tabMaisonAutourRoutes++;
                                                         if( tabPlateau[tabPlateau[k][l].sommetGrapheI][tabPlateau[k][l].sommetGrapheJ].sommetDansLeGrapheHab == 1) {
                                                             CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose);
-                                                            //Psommet2 = Trier(Psommet2);
-                                                            //SupprimerArete(&Psommet2,tabPlateau, i, j);
-                                                            //Psommet2 = TrierDansLeBonSensDeLaPose(Psommet2);
-                                                            //Parcourir(Psommet2, tabPlateau, i, j, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
-                                                            //afficher(Psommet2, tabPlateau, i, j);
+
                                                         }
                                                     }
                                                 }
@@ -570,41 +622,34 @@ void jeuPrincipale(int* finDuJeu) {
                                                     if(tabPlateau[k][l].routeOccupe == 1){
 
                                                         if ((k == i-1) && (l != j - NB_Cases_Place_UsineX-1) && (l != j+1)){
-                                                            //printf("1");
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineEau = 1;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
                                                         }
                                                         if ((l == j - NB_Cases_Place_UsineY-1) && (k != i-1) && (k != i+NB_Cases_Place_UsineX+1)){
-                                                            //printf("2");
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineEau = 1;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
                                                         }
                                                         if ((l == j+1) && (k != i-1) && (k != i+NB_Cases_Place_UsineY+1)){
-                                                            //printf("3");
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineEau = 1;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
                                                         }
                                                         if ((k == i+NB_Cases_Place_UsineX+1) && (l != j - NB_Cases_Place_UsineY-1) && (l != j+1)){
-                                                            //printf("4");
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineEau = 1;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineElec = 0;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
@@ -612,11 +657,7 @@ void jeuPrincipale(int* finDuJeu) {
                                                         tabPlateau[k][l].tabMaisonAutourRoutes++;
                                                         if(tabPlateau[tabPlateau[k][l].sommetGrapheI][tabPlateau[k][l].sommetGrapheJ].sommetDansLeGrapheUsineEau == 1) {
                                                             CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose);
-                                                            //Psommet2 = Trier(Psommet2);
-                                                            //SupprimerArete(&Psommet2,tabPlateau, i, j);
-                                                            //Psommet2 = TrierDansLeBonSensDeLaPose(Psommet2);
-                                                            //Parcourir(Psommet2, tabPlateau, i, j, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
-                                                            //afficher(Psommet2, tabPlateau, i, j);
+
                                                         }
                                                     }
                                                 }
@@ -661,41 +702,34 @@ void jeuPrincipale(int* finDuJeu) {
                                                     if(tabPlateau[k][l].routeOccupe == 1){
 
                                                         if ((k == i-1) && (l != j - NB_Cases_Place_UsineX-1) && (l != j+1)){
-                                                            //printf("1");
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineElec = 1;
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
                                                         }
                                                         if ((l == j - NB_Cases_Place_UsineY-1) && (k != i-1) && (k != i+NB_Cases_Place_UsineX+1)){
-                                                            //printf("2");
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineElec = 1;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
                                                         }
                                                         if ((l == j+1) && (k != i-1) && (k != i+NB_Cases_Place_UsineY+1)){
-                                                            //printf("3");
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineElec = 1;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
                                                         }
                                                         if ((k == i+NB_Cases_Place_UsineX+1) && (l != j - NB_Cases_Place_UsineY-1) && (l != j+1)){
-                                                            //printf("4");
-                                                            tabPlateau[k][l].sommetDansLeGrapheUsineEau = 0;
+
                                                             tabPlateau[k][l].sommetDansLeGrapheUsineElec = 1;
-                                                            tabPlateau[k][l].sommetDansLeGraphe = 0;
-                                                            tabPlateau[k][l].sommetDansLeGrapheHab = 0;
+
                                                             tabPlateau[k][l].sommetGrapheI = k;
                                                             tabPlateau[k][l].sommetGrapheJ = l;
 
@@ -703,11 +737,7 @@ void jeuPrincipale(int* finDuJeu) {
                                                         tabPlateau[k][l].tabMaisonAutourRoutes++;
                                                         if(tabPlateau[tabPlateau[k][l].sommetGrapheI][tabPlateau[k][l].sommetGrapheJ].sommetDansLeGrapheUsineElec == 1) {
                                                             CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec,nombreRoutePose);
-                                                            //Psommet2 = Trier(Psommet2);
-                                                            //SupprimerArete(&Psommet2,tabPlateau, i, j);
-                                                            //Psommet2 = TrierDansLeBonSensDeLaPose(Psommet2);
-                                                            //Parcourir(Psommet2, tabPlateau, i, j, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
-                                                            //afficher(Psommet2, tabPlateau, i, j);
+
                                                         }
                                                     }
                                                 }
@@ -739,82 +769,12 @@ void jeuPrincipale(int* finDuJeu) {
                                         EnleverRoute = FALSE;
                                     }
                                 }
-                                //printf("%d %d\n", iHabPourAretes, jHabPourAretes);
-                                ///
-                                /*if(tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGraphe == 1 || tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGrapheHab == 1) {
-                                CreerArete2(&Psommet2, tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau);
-                                Psommet2 = Trier(Psommet2);
-                                SupprimerArete(&Psommet2,tabPlateau, i, j);
-                                afficher(Psommet2, tabPlateau, i, j);
-                                }*/
+
 
                             }
-                            /// mode bat
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 500 && event.mouse.y < 550){
-                                clickCarreBleu = TRUE;
-                                choixCarreRoute = FALSE;
-                                affichageElec = FALSE;
-                                affichageEau = FALSE;
-                                affichageRoute = TRUE;
-                                choixUsineEau = FALSE,
-                                choixUsineElec = FALSE;
-                            }
-                            /// Quitter le mode choix des bat et routes
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 700 && event.mouse.y < 750){
-                                clickCarreBleu = FALSE;
-                                choixCarreRoute = FALSE;
-                                affichageElec = FALSE;
-                                affichageEau = FALSE;
-                                affichageRoute = TRUE;
-                                choixUsineEau = FALSE,
-                                choixUsineElec = FALSE;
-                            }
-                            /// mode route
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 400 && event.mouse.y < 450){
-                                choixCarreRoute = TRUE;
-                                affichageRoute = TRUE;
-                                clickCarreBleu = FALSE;
-                                affichageElec = FALSE;
-                                affichageEau = FALSE;
-                                choixUsineEau = FALSE,
-                                choixUsineElec = FALSE;
-                            }
-                            /// choix carre eau vert
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 570 && event.mouse.y < 620){
-                                choixCarreRoute = FALSE;
-                                affichageRoute = TRUE;
-                                clickCarreBleu = FALSE;
-                                affichageElec = FALSE;
-                                affichageEau = FALSE;
-                                choixUsineEau = TRUE;
-                                choixUsineElec = FALSE;
-                            }
-                            /// choix carre ele noir
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 630 && event.mouse.y < 680){
-                                choixCarreRoute = FALSE;
-                                affichageRoute = TRUE;
-                                clickCarreBleu = FALSE;
-                                affichageElec = FALSE;
-                                affichageEau = FALSE;
-                                choixUsineEau = FALSE,
-                                choixUsineElec = TRUE;
-                            }
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 100 && event.mouse.y < 150){
-                                affichageRoute = FALSE;
-                                affichageElec = FALSE;
-                                affichageEau = TRUE;
-                                choixUsineEau = FALSE,
-                                choixUsineElec = FALSE;
-                                al_draw_text(police, al_map_rgb(0,0,0), 100, 120, 0, "Niveau -1");
-                            }
-                            if(event.mouse.x > 20 && event.mouse.x < 70 && event.mouse.y > 200 && event.mouse.y < 250){
-                                affichageRoute = FALSE;
-                                affichageElec = TRUE;
-                                affichageEau = FALSE;
-                                choixUsineEau = FALSE,
-                                choixUsineElec = FALSE;
-                                al_draw_text(police, al_map_rgb(0,0,0), 100, 220, 0, "Niveau -2");
-                            }
+                            /// Choix dans la barre a outil
+                            choixModes(event, &clickCarreBleu, &choixCarreRoute, &affichageElec, &affichageEau, &affichageRoute,&choixUsineEau, &choixUsineElec, police);
+
                         }
                     }
                 }
@@ -823,19 +783,7 @@ void jeuPrincipale(int* finDuJeu) {
                 break;
 
             case ALLEGRO_EVENT_MOUSE_AXES: {
-                for (int i = 0; i < NB_CASES; ++i) {
-                    for (int j = 0; j < 35; ++j) {
-
-                        valeurSourisX = event.mouse.x;
-                        valeurSourisY = event.mouse.y;
-                        if(event.mouse.x > tabPlateau[i][j].x1 && event.mouse.x < tabPlateau[i][j].x1 + LARGEUR_CASE && event.mouse.y > tabPlateau[i][j].y1 && event.mouse.y < tabPlateau[i][j].y1 + HAUTEUR_CASE){
-                            sourisDessusX = i;
-                            sourisDessusY = j;
-                            i_flottant = i;
-                            j_flottant = j;
-                        }
-                    }
-                }
+                SourisSurCase(tabPlateau, &valeurSourisX, &valeurSourisY, &sourisDessusX, &sourisDessusY, event);
                 break;
             }
 
@@ -849,45 +797,14 @@ void jeuPrincipale(int* finDuJeu) {
                         al_start_timer(timer1sec);
                         minutes++;
                     }
-                    /*if(tabPlateau[premierSommeti+1][premierSommetj].routeOccupe == 0 && tabPlateau[premierSommeti-1][premierSommetj].routeOccupe == 0 && tabPlateau[premierSommeti][premierSommetj+1].routeOccupe == 0 && tabPlateau[premierSommeti][premierSommetj-1].routeOccupe == 0){
-                        //numCompoConnexe++;
-                        //tabPlateau[premierSommeti][premierSommetj].numeroCompoConnexe = numCompoConnexe;
-                    }else*/
-                    /*if(tabPlateau[premierSommeti+1][premierSommetj].routeOccupe == 1){
-                        tabPlateau[premierSommeti+1][premierSommetj].numeroCompoConnexe = tabPlateau[premierSommeti][premierSommetj].numeroCompoConnexe;
-                    }else if(tabPlateau[premierSommeti-1][premierSommetj].routeOccupe == 1){
-                        tabPlateau[premierSommeti-1][premierSommetj].numeroCompoConnexe=tabPlateau[premierSommeti][premierSommetj].numeroCompoConnexe;
-                    }else if(tabPlateau[premierSommeti][premierSommetj+1].routeOccupe == 1){
-                        tabPlateau[premierSommeti][premierSommetj+1].numeroCompoConnexe = tabPlateau[premierSommeti][premierSommetj].numeroCompoConnexe ;
-                    }else if(tabPlateau[premierSommeti][premierSommetj-1].routeOccupe == 1){
-                        tabPlateau[premierSommeti][premierSommetj-1].numeroCompoConnexe=tabPlateau[premierSommeti][premierSommetj].numeroCompoConnexe;
-                    }*/
-                    for (int i = 0; i < NB_CASES; ++i) {
-                        for (int j = 0; j < NB_CASES; ++j) {
-                            if(tabPlateau[i][j].routeOccupe == 1) {
-                                if (tabPlateau[i + 1][j].routeOccupe == 1 && tabPlateau[i + 1][j].numeroCompoConnexe > 0 && tabPlateau[i + 1][j].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
-                                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i + 1][j].numeroCompoConnexe;
-                                } else if (tabPlateau[i - 1][j].routeOccupe == 1 && tabPlateau[i - 1][j].numeroCompoConnexe > 0 && tabPlateau[i - 1][j].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
-                                    //printf("%d\n", tabPlateau[i][j].numeroCompoConnexe);
-                                    //printf("2 %d\n\n", tabPlateau[i-1][j].numeroCompoConnexe);
-                                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i - 1][j].numeroCompoConnexe;
-                                } else if (tabPlateau[i][j + 1].routeOccupe == 1 && tabPlateau[i][j+1].numeroCompoConnexe > 0 && tabPlateau[i][j+1].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
-                                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i][j + 1].numeroCompoConnexe;
-                                } else if (tabPlateau[i][j - 1].routeOccupe == 1 && tabPlateau[i][j-1].numeroCompoConnexe > 0&& tabPlateau[i][j-1].numeroCompoConnexe > tabPlateau[i][j].numeroCompoConnexe) {
-                                    tabPlateau[i][j].numeroCompoConnexe = tabPlateau[i][j - 1].numeroCompoConnexe;
-                                }
-                                Parcourir(Psommet2, tabPlateau, i, j, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
-                                //printf(" timer  : %d\n", tabPlateau[1][1].numeroCompoConnexe);
-                                //printf("%d %d : %d\n", i, j, tabPlateau[i][j].numeroCompoConnexe);
-                                //ajouterCompoConnexe(&Psommet2, tabPlateau, i, j);
-                            }
-                        }
-                    }
-                            changementCompoConnexe = FALSE;
 
+                    ComposanteConnexeDuGraphe(tabPlateau, Psommet2, compteurUsineEau, compteurUsineElec, numeroConneDeUsineEau, numeroConnexeDeUsineElec);
 
-
-                dessinerLeJeu(tabPlateau, tabBit, sourisDessusX, sourisDessusY, ligne, nbNombreBatPose,nbNombreUsineEauPose, nbNombreUsineElecPose,valeurSourisX, valeurSourisY, minutes, nbHabTotal, &eceFloos, clickCarreBleu,affichageRoute, affichageEau, affichageElec,choixUsineElec,choixUsineEau,RouteColleBat, timer, timer1sec, police, policePetite,RouteDroite, RouteDroite2, Tournant, Tournant2, Tournant3, Tournant4, DoubleTournant,DoubleTournant2, DoubleTournant3, DoubleTournant4, Croisement, TerrainVague, Maison1,Maison2, Maison3, Maison4, MapFond, NuageFond, Ruine, Immeuble, GratteCiel, Cabane,PieceMonnaie, Habitant, CentralElectrique, ChateauEau, CroixRouge);
+                    drawFondEtCases(NuageFond,MapFond);
+                    drawLine(ligne, X_DEPART, Y_DEPART);
+                    dessinerRoutes(tabPlateau, RouteDroite, RouteDroite2, Tournant, Tournant2, Tournant3, Tournant4, DoubleTournant,DoubleTournant2, DoubleTournant3, DoubleTournant4, Croisement, timer, police, policePetite, affichageRoute, affichageEau, affichageElec);
+                    drawMaison(tabPlateau, tabBit, nbNombreBatPose, affichageEau, affichageElec, timer, policePetite, TerrainVague, Maison1, Maison2, Maison3, Maison4, Ruine, Immeuble, GratteCiel, Cabane, PieceMonnaie, Habitant, CentralElectrique, ChateauEau, CroixRouge);
+                    BoiteAOutilEtTimer(tabPlateau, tabBit, sourisDessusX, sourisDessusY, nbNombreBatPose, valeurSourisX, valeurSourisY, minutes, &nbHabTotal, &eceFloos, clickCarreBleu, choixUsineElec,choixUsineEau, timer, timer1sec, police, TerrainVague, PieceMonnaie, Habitant, CentralElectrique, ChateauEau);
                 }
                 break;
             }

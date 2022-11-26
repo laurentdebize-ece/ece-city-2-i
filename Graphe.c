@@ -20,14 +20,18 @@ void Parcourir(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j, 
         if(m->typeUsineEau == 1){
             compteurUsineEau = 1;
             numConnexeUsineEAu = tabPlateau[m->i][m->j].numeroCompoConnexe;
-        } else if(m->typeUsineElec == 1){
+            //printf("1\n");
+        }
+        if(m->typeUsineElec == 1){
             compteurUsineElec = 1;
             numConnexeUsineElec = tabPlateau[m->i][m->j].numeroCompoConnexe;
+            //printf("2\n");
         }
 
         m = m->next;
     }
     if(compteurUsineEau >= 1 && compteurUsineElec >= 1 && tabPlateau[i] && numConnexeUsineEAu == numConnexeUsineElec){
+        //printf("(");
         while (temp != NULL){
             if(tabPlateau[temp->i][temp->j].numeroCompoConnexe == numConnexeUsineElec) {
                 tabPlateau[temp->i][temp->j].viable = 1;
@@ -59,12 +63,16 @@ void afficher(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j){
         if(m->typeRoutes == 1) {
             printf("Routes : %d %d: %d\n", m->i, m->j, m->NumeroDelaRoutePose);
 
-        }else if(m->typeHab == 1){
+        }
+        if(m->typeHab == 1){
             printf("Maison : %d %d: %d (bat autour %d) prec : %d\n", m->i, m->j, m->numeroCase, m->tabMaisonAutourRoutes, m->sommetPrecedent);
 
-        }else if(m->typeUsineEau == 1){
-            printf("Usine : %d %d: %d (bat autour %d) prec : %d\n", m->i, m->j, m->numeroCase, m->tabMaisonAutourRoutes, m->sommetPrecedent);
-
+        }
+        if(m->typeUsineEau == 1){
+            printf("UsineEau : %d %d: %d (bat autour %d) prec : %d\n", m->i, m->j, m->numeroCase, m->tabMaisonAutourRoutes, m->sommetPrecedent);
+        }
+        if(m->typeUsineElec == 1){
+            printf("UsineELec : %d %d: %d (bat autour %d) prec : %d\n", m->i, m->j, m->numeroCase, m->tabMaisonAutourRoutes, m->sommetPrecedent);
         }
         m = m->next;
     }
@@ -87,6 +95,7 @@ void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int nu
         (*Psommet2)->typeHab = tabPlateau[i][j].sommetDansLeGrapheHab;
         (*Psommet2)->typeUsineEau = tabPlateau[i][j].sommetDansLeGrapheUsineEau;
         (*Psommet2)->typeUsineElec = tabPlateau[i][j].sommetDansLeGrapheUsineElec;
+        //printf("%d %d\n", (*Psommet2)->typeUsineElec, (*Psommet2)->typeUsineEau);
 
     }
     else{
@@ -107,6 +116,7 @@ void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int nu
         temp->next->typeUsineEau = tabPlateau[i][j].sommetDansLeGrapheUsineEau;
         temp->next->typeUsineElec = tabPlateau[i][j].sommetDansLeGrapheUsineElec;
         temp->next->tabMaisonAutourRoutes =tabPlateau[i][j].tabMaisonAutourRoutes;
+        //printf("%d %d\n", temp->next->typeUsineElec, temp->next->typeUsineEau);
         temp->next->next = NULL;
 
 

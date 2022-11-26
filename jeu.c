@@ -299,6 +299,8 @@ void jeuPrincipale(int* finDuJeu) {
     int nombreRoutePose = 0;
     int numeroConnexeDeUsineElec = 0;
     int numeroConneDeUsineEau = 0;
+    int numChateau = 0;
+
 
     bool clickCarreBleu = FALSE;
     bool choixCarreRoute = FALSE;
@@ -612,9 +614,11 @@ void jeuPrincipale(int* finDuJeu) {
 
                                                 }
                                             }
+                                            (Psommet2)->numeroChateau = numChateau++;
                                             nb_element_terrain++;
                                             nbNombreBatPose++;
                                             comptbitmap1++;
+                                            
                                             eceFloos = eceFloos - 5000;
 
                                             for (int k = i-1; k <= i+NB_Cases_Place_UsineX+1; ++k) {

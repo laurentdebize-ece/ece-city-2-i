@@ -32,6 +32,11 @@ typedef struct Arc* pArc;
 struct Sommet {
     struct Arc* arc;
     int valeur, marque, pred;
+    int distance;
+    int couleur;
+    int connexe;
+    int* debut;
+    int* finxplo;
 };
 
 typedef struct Sommet* pSommet;
@@ -118,6 +123,7 @@ typedef struct Som{
     int numeroCompoConnexe;
     int numeroCaseSommetAdj[4];
     int nbSommetAdj;
+    int distance;
 }Sommet2;
 
 typedef struct {

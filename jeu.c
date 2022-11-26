@@ -52,7 +52,7 @@ void jeuPrincipale(int* finDuJeu) {
     int nombreRoutePose = 0;
     int numeroConnexeDeUsineElec = 0;
     int numeroConneDeUsineEau = 0;
-
+    int numChateau = 0;
     bool clickCarreBleu = FALSE;
     bool choixCarreRoute = FALSE;
     bool impossiblePlacerBat = FALSE;
@@ -317,6 +317,7 @@ void jeuPrincipale(int* finDuJeu) {
                                                 tabPlateau[i][j].tabMaisonAutourRoutesj[nbBatAutourDesRoutes] = j;
                                                 tabPlateau[i][j].tabMaisonAutourRoutes++;
                                                 nbBatAutourDesRoutes++;
+                                                (Psommet2)->numeroChateau = numChateau++;
                                             }
                                             if(tabPlateau[i-1][j].occupeUsineElec == 1){
                                                 tabPlateau[i][j].sommetDansLeGraphe = 1;

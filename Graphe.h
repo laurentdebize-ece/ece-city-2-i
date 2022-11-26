@@ -124,6 +124,8 @@ typedef struct Som{
     int numeroCaseSommetAdj[4];
     int nbSommetAdj;
     int distance;
+    int marque;
+    int numeroChateau;
 }Sommet2;
 
 typedef struct {

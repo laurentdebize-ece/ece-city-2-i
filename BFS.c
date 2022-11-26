@@ -40,75 +40,54 @@ int defiler(t_file *f){
 
 
 
-int BFS(Graphe* g,int s0, Sommet2 ** Psommet2, int nbhab)// prend en parametre le graphe (sous forme de liste d'adjacence) et le sommet initial
-{
+int BFS(Sommet2 ** Psommet2, int nbbathab){ // prend en parametre le graphe (sous forme de liste d'adjacence) et le sommet initial
+
     int tabDistanceChateau[10][15];
     //premier indice : numéro chateau ,2e indice : numéro maison
 
-    while((*Psommet2)->next != NULL){
-        if((*Psommet2)->typeHab == 1){
-            (*Psommet2)->distance = 0;
+    bool end = false;
+
+    //On met la distance de tous les sommet habitation à 0 :
+    Sommet2* temp1 = *Psommet2;
+    while(temp1->next != NULL){
+        if(temp1->typeHab == 1){
+            temp1->distance = 0;
         }
-        (*Psommet2) = (*Psommet2)->next;
-    }
-
-    //BFS
-    t_file f;
-    f.tete = f.fin = NULL;
-
-    for (int i = 0; i < g->ordre; i++) {
-        g->pSommet[i]->couleur = 0;
+        temp1 = temp1->next;
     }
 
 
 
-    enfiler(&f, s0);
+    for(int j=0; j <nbbathab; j++){ //effectue pour chaque habitation le calcul de distance
+        Sommet2* temp2 = *Psommet2;
+        while(!end){
+            while (temp2 != NULL) {
+                while(temp2->typeUsineEau != 1){
+                    if(temp2->marque !=1){
+                        temp2->marque = 1;
+                        (*Psommet2)->distance++;
+                        temp2 = temp2->next;
+                    }
+                    end = true;
 
-    g->pSommet[s0]->couleur = 1;
-    for(int i=0; i <nbhab; i++){ //effectue pour chaque habitation le calcul de distance
-        while (f.tete != NULL) {
-            int num = defiler(&f);
-            struct Arc *temp = g->pSommet[num]->arc;
-            while (temp != NULL) {
-                while((*Psommet2)->typeUsineEau != 1){
-
-                    //possiblement devoir créer un tableau de chateau avec dans chaque case son pointeur
                     //à la sortie ajouter l'association de la distance au chateau en question
 
-                    //on récupère le numéro du sommet
-                    // vers lequel conduit l'arc
-                    int num2 = temp->sommet;
-                    //si ce sommet n'est pas marqué
-                    if (g->pSommet[num2]->couleur == 0) {
-                        //? on l'enfile
-                        enfiler(&f, num2);
-                        //? on le marque
-                        g->pSommet[num2]->couleur = 1;
 
-                        (*Psommet2)->distance++;
-
-                        temp = temp->arc_suivant;
-                    }
                 }
-                //trouver comment obtenir le numéro du chateau pour tabDistanceChateau[10][i];
-                //tabDistanceChateau[(*Psommet2)->numeroChateau][i] = (*Psommet2)->distance;
-                temp = temp->arc_suivant;
+                //trouver comment obtenir le numéro du chateau pour tabDistanceChateau[10][j];
+                tabDistanceChateau[(temp2)->numeroChateau][j] = (*Psommet2)->distance;
+
 
             }
         }
+        //reset des marques
+        while(temp1->next->marque != 0){
+            temp1->marque = 0;
+            temp1 = temp1->next;
+        }
+
+
     }
-
-    for (int i = 0; i < g->ordre; i++) {
-        g->pSommet[i]->debut=0;
-        g->pSommet[i]->finxplo=0;
-        g->pSommet[i]->connexe=-1;
-    }
-
-    for (int i = 0; i < g->ordre; i++) {
-        g->pSommet[i]->couleur = 0;
-    }
-
-
 
     return 0;
 }

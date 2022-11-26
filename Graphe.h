@@ -32,11 +32,6 @@ typedef struct Arc* pArc;
 struct Sommet {
     struct Arc* arc;
     int valeur, marque, pred;
-    int distance;
-    int couleur;
-    int connexe;
-    int* debut;
-    int* finxplo;
 };
 
 typedef struct Sommet* pSommet;
@@ -123,9 +118,6 @@ typedef struct Som{
     int numeroCompoConnexe;
     int numeroCaseSommetAdj[4];
     int nbSommetAdj;
-    int distance;
-    int marque;
-    int numeroChateau;
 }Sommet2;
 
 typedef struct {
@@ -143,7 +135,6 @@ Sommet2 * Trier(Sommet2 * m);
 Sommet2 * TrierDansLeBonSensDeLaPose(Sommet2 * m);
 //int TrouverNumeroCase(int iCase, int jCase);
 void check_relier_cases(Graphe* g, int i_constant, int j_constant, int i , int j, int i_bis, int j_bis, bool pose_de_route, Construction* tab_constru, Cases tab[COLONNES][COLONNES]);
-
 
 
 #endif

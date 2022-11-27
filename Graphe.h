@@ -132,7 +132,7 @@ void ajouterCompoConnexe(Sommet2** sommet, Cases tabPlateau[COLONNES][COLONNES],
 void Parcourir(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j,int compteurUsineEau, int compteurUsineElec, int numConnexeUsineEAu, int numConnexeUsineElec);
 void SupprimerArete(Sommet2** sommet,Cases tabPlateau[COLONNES][COLONNES], int i, int j);
 void afficher(Sommet2 * m, Cases tabPlateau[COLONNES][COLONNES], int i, int j);
-void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int numeroCase, int PremierSommet, int tabMarque[45*35], Cases tabPlateau[COLONNES][COLONNES], int* sommetPrec, int nbRoutesPose);
+void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int numeroCase, int PremierSommet, int tabMarque[45*35], Cases tabPlateau[COLONNES][COLONNES], int* sommetPrec, int nbRoutesPose, int* numChateau);
 pSommet* CreerArete(pSommet* sommet, int i, int j, int i_bis, int j_bis, int numeroCase,  int premierSommet, int tabMarque[45*35]);
 Sommet2 * Trier(Sommet2 * m);
 Sommet2 * TrierDansLeBonSensDeLaPose(Sommet2 * m);

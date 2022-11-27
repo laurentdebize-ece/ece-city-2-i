@@ -299,7 +299,7 @@ void jeuPrincipale(int* finDuJeu) {
     int nombreRoutePose = 0;
     int numeroConnexeDeUsineElec = 0;
     int numeroConneDeUsineEau = 0;
-    int numChateau = 0;
+    int* numChateau = 0;
 
 
     bool clickCarreBleu = FALSE;
@@ -501,7 +501,7 @@ void jeuPrincipale(int* finDuJeu) {
                                         tabPlateau[i][j].sommetGrapheJ = j;
 
                                         if(tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGraphe >= 1 /*|| tabPlateau[tabPlateau[i][j].sommetGrapheI][tabPlateau[i][j].sommetGrapheJ].sommetDansLeGrapheHab == 1*/) {
-                                            CreerArete2(&Psommet2, tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose);
+                                            CreerArete2(&Psommet2, tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[i][j].sommetGrapheI, tabPlateau[i][j].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose, numChateau);
                                         }
                                     }
                                     if(clickCarreBleu == TRUE){
@@ -576,7 +576,7 @@ void jeuPrincipale(int* finDuJeu) {
                                                         }
                                                         tabPlateau[k][l].tabMaisonAutourRoutes++;
                                                         if( tabPlateau[tabPlateau[k][l].sommetGrapheI][tabPlateau[k][l].sommetGrapheJ].sommetDansLeGrapheHab == 1) {
-                                                            CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose);
+                                                            CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose, numChateau);
 
                                                         }
                                                     }
@@ -614,7 +614,6 @@ void jeuPrincipale(int* finDuJeu) {
 
                                                 }
                                             }
-                                            (Psommet2)->numeroChateau = numChateau++;
                                             nb_element_terrain++;
                                             nbNombreBatPose++;
                                             comptbitmap1++;
@@ -660,7 +659,7 @@ void jeuPrincipale(int* finDuJeu) {
                                                         }
                                                         tabPlateau[k][l].tabMaisonAutourRoutes++;
                                                         if(tabPlateau[tabPlateau[k][l].sommetGrapheI][tabPlateau[k][l].sommetGrapheJ].sommetDansLeGrapheUsineEau == 1) {
-                                                            CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose);
+                                                            CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec, nombreRoutePose, numChateau);
 
                                                         }
                                                     }
@@ -740,7 +739,7 @@ void jeuPrincipale(int* finDuJeu) {
                                                         }
                                                         tabPlateau[k][l].tabMaisonAutourRoutes++;
                                                         if(tabPlateau[tabPlateau[k][l].sommetGrapheI][tabPlateau[k][l].sommetGrapheJ].sommetDansLeGrapheUsineElec == 1) {
-                                                            CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec,nombreRoutePose);
+                                                            CreerArete2(&Psommet2, tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ, premierSommeti, premierSommetj,TrouverNumeroCase(tabPlateau[k][l].sommetGrapheI, tabPlateau[k][l].sommetGrapheJ),TrouverNumeroCase(premierSommeti, premierSommetj), tabMArque,tabPlateau, &sommetPrec,nombreRoutePose, numChateau);
 
                                                         }
                                                     }

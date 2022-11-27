@@ -127,7 +127,7 @@ void menuprincipal(){
                 *curseur_x = event.mouse.x;
                 *curseur_y = event.mouse.y;
 
-                if(*curseur_x >= 1600 && *curseur_x <= 1883 && *curseur_y >= 60 && *curseur_y <= 169) {
+                if(*curseur_x >= 1400 && *curseur_x <= 1683 && *curseur_y >= 50 && *curseur_y <= 150) {
 
                     al_clear_to_color(al_map_rgb(0, 0, 0));
                     al_draw_bitmap(image_accueil, 0, 0, 0);
@@ -139,7 +139,7 @@ void menuprincipal(){
                     clic_sur_commencer = true;
 
                 }
-                else if(*curseur_x >= 1600 && *curseur_x <= 1883 && *curseur_y >= 180 && *curseur_y <= 289) {
+                else if(*curseur_x >= 1400 && *curseur_x <= 1683 && *curseur_y >= 160 && *curseur_y <= 260) {
 
                     al_clear_to_color(al_map_rgb(0, 0, 0));
                     al_draw_bitmap(image_accueil, 0, 0, 0);
@@ -218,7 +218,7 @@ void menuprincipal(){
                 *curseur_x = event.mouse.x;
                 *curseur_y = event.mouse.y;
 
-                if(*curseur_x >= 600 && *curseur_x <= 790 && *curseur_y >= 360 && *curseur_y <= 671) {
+                if(*curseur_x >= 400 && *curseur_x <= 590 && *curseur_y >= 360 && *curseur_y <= 671) {
                     if(lancer_son == 0) {
 
                         // al_play_sample(son_choix, 0.5, 0, 1, ALLEGRO_PLAYMODE_ONCE, &my_id);
@@ -236,7 +236,7 @@ void menuprincipal(){
                     curseur_sur_communiste = true;
 
                 }
-                else if(*curseur_x >= 1110 && *curseur_x <= 1311 && *curseur_y >= 370 && *curseur_y <= 681) {
+                else if(*curseur_x >= 910 && *curseur_x <= 1111 && *curseur_y >= 370 && *curseur_y <= 681) {
                     if(lancer_son == 0) {
 
                         //  al_play_sample(son_choix, 0.5, 0, 1, ALLEGRO_PLAYMODE_ONCE, &my_id);

@@ -1,6 +1,326 @@
 #include "jeu.h"
 
 
+void menuprincipal(){
+    bool fin_page_accueil = false, fin_choix_mode = false, fin_jeu = false, curseur_sur_communiste = false, curseur_sur_capitaliste = false;
+    bool clic_sur_commencer = false, clic_sur_quitter = false;
+
+    int lancer_son = 0;
+
+    int place_souris_x = 0, place_souris_y = 0;
+    int* curseur_x = &place_souris_x;
+    int* curseur_y = &place_souris_y;
+
+    ALLEGRO_DISPLAY* display = NULL;
+    ALLEGRO_EVENT_QUEUE* queue = NULL;
+    ALLEGRO_TIMER* timer = NULL;
+
+    ALLEGRO_EVENT event = {0};
+
+    ALLEGRO_BITMAP *image_accueil = NULL;
+    ALLEGRO_BITMAP *titre_accueil = NULL;
+    ALLEGRO_BITMAP *bouton_commencer_normal = NULL;
+    ALLEGRO_BITMAP *bouton_quitter_normal = NULL;
+    ALLEGRO_BITMAP *bouton_commencer_grand = NULL;
+    ALLEGRO_BITMAP *bouton_quitter_grand = NULL;
+    ALLEGRO_BITMAP *fond_choix_mode = NULL;
+    ALLEGRO_BITMAP *panneau_capitalisme = NULL;
+    ALLEGRO_BITMAP *panneau_communisme = NULL;
+    ALLEGRO_BITMAP *mode_communiste_normal = NULL;
+    ALLEGRO_BITMAP *mode_capitaliste_normal = NULL;
+    ALLEGRO_BITMAP *mode_communiste_grand = NULL;
+    ALLEGRO_BITMAP *mode_capitaliste_grand = NULL;
+
+
+    ALLEGRO_SAMPLE* clic = NULL;
+    ALLEGRO_SAMPLE* musique_accueil = NULL;
+    ALLEGRO_SAMPLE_INSTANCE* musique_fond_accueil = NULL;
+    ALLEGRO_SAMPLE* musique_choix = NULL;
+    ALLEGRO_SAMPLE_INSTANCE* musique_fond_choix = NULL;
+    ALLEGRO_SAMPLE* son_choix = NULL;
+    //  ALLEGRO_SAMPLE_ID  my_id;
+
+    assert(al_init());
+    assert(al_install_keyboard());
+    assert(al_install_mouse());
+    assert(al_install_audio());
+    al_init_image_addon();
+    al_init_acodec_addon();
+    al_init_font_addon();
+    al_init_ttf_addon();
+    al_init_primitives_addon();
+
+    display = al_create_display(LARGEUR, HAUTEUR);
+    al_set_window_title(display, "***ECE-City***");
+    assert(display != NULL);
+
+    timer = al_create_timer(1.0 / 10.0);
+
+    queue = al_create_event_queue();
+    assert(queue != NULL);
+
+    image_accueil = al_load_bitmap("../ecran_accueil.png"); //ok
+    titre_accueil = al_load_bitmap("../titre.png");//ok
+    bouton_commencer_normal = al_load_bitmap("../bitmap_bouton_commencer.png");//ok
+    bouton_quitter_normal = al_load_bitmap("../bitmap_bouton_quitter.png");//ok
+    bouton_commencer_grand = al_load_bitmap("../bouton_commencer_grand.png");//ok
+    bouton_quitter_grand = al_load_bitmap("../bouton_quitter_grand.png");//ok
+    fond_choix_mode = al_load_bitmap("../fond_mode.png");//ok
+    panneau_capitalisme = al_load_bitmap("../bouton_capitalisme.png");//ok
+    panneau_communisme = al_load_bitmap("../bouton_communisme.png");//ok
+    mode_communiste_normal = al_load_bitmap("../bitmap_communisme.png");//ok
+    mode_capitaliste_normal = al_load_bitmap("../bitmap_capitalisme.png");//ok
+    mode_communiste_grand = al_load_bitmap("../bitmap_communisme_grand.png");//ok
+    mode_capitaliste_grand = al_load_bitmap("../bitmap_capitalisme_grand.png");//ok
+
+    al_reserve_samples(15);
+
+    clic = al_load_sample("../BRUIT_-_CLIC.ogg");//ok
+    son_choix = al_load_sample("../magic-mobil-1.ogg");//ok
+
+    musique_accueil = al_load_sample("../SimCity-_-2013-_-Soundtrack-01.-SimCity-Theme.ogg");//ok
+    musique_fond_accueil = al_create_sample_instance(musique_accueil);
+    al_set_sample_instance_playmode(musique_fond_accueil, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_sample_instance_to_mixer(musique_fond_accueil, al_get_default_mixer());
+
+    musique_choix = al_load_sample("../Son_choix_mode.ogg");//ok
+    musique_fond_choix = al_create_sample_instance(musique_choix);
+    al_set_sample_instance_playmode(musique_fond_choix, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_sample_instance_to_mixer(musique_fond_choix, al_get_default_mixer());
+
+    al_register_event_source(queue, al_get_keyboard_event_source());
+    al_register_event_source(queue, al_get_mouse_event_source());
+    al_register_event_source(queue, al_get_display_event_source(display));
+    al_register_event_source(queue, al_get_timer_event_source(timer));
+
+
+    al_start_timer(timer);
+
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_draw_bitmap(image_accueil, 0, 0, 0);
+    al_draw_bitmap(titre_accueil, al_get_display_width(display)/2 - al_get_bitmap_width(titre_accueil)/2, 0, 0);
+    al_draw_bitmap(bouton_commencer_normal, 1600, 60, 0);
+    al_draw_bitmap(bouton_quitter_normal, 1600, 180, 0);
+    al_flip_display();
+
+    while(!fin_page_accueil) {
+
+        if(!al_is_event_queue_empty(queue)) {
+            al_wait_for_event(queue, &event);
+        }
+
+        switch(event.type) {
+
+            case ALLEGRO_EVENT_DISPLAY_CLOSE: {
+                fin_page_accueil = true;
+                break;
+            }
+            case ALLEGRO_EVENT_KEY_DOWN: {
+                switch(event.keyboard.keycode) {
+                    case ALLEGRO_KEY_ESCAPE: {
+                        fin_page_accueil = true;
+                        break;
+                    }
+                }
+            }
+            case ALLEGRO_EVENT_MOUSE_AXES: {
+                *curseur_x = event.mouse.x;
+                *curseur_y = event.mouse.y;
+
+                if(*curseur_x >= 1600 && *curseur_x <= 1883 && *curseur_y >= 60 && *curseur_y <= 169) {
+
+                    al_clear_to_color(al_map_rgb(0, 0, 0));
+                    al_draw_bitmap(image_accueil, 0, 0, 0);
+                    al_draw_bitmap(titre_accueil, al_get_display_width(display)/2 - al_get_bitmap_width(titre_accueil)/2, 0, 0);
+                    al_draw_bitmap(bouton_commencer_grand, 1589, 55, 0);
+                    al_draw_bitmap(bouton_quitter_normal, 1600, 180, 0);
+                    al_flip_display();
+
+                    clic_sur_commencer = true;
+
+                }
+                else if(*curseur_x >= 1600 && *curseur_x <= 1883 && *curseur_y >= 180 && *curseur_y <= 289) {
+
+                    al_clear_to_color(al_map_rgb(0, 0, 0));
+                    al_draw_bitmap(image_accueil, 0, 0, 0);
+                    al_draw_bitmap(titre_accueil, al_get_display_width(display)/2 - al_get_bitmap_width(titre_accueil)/2, 0, 0);
+                    al_draw_bitmap(bouton_commencer_normal, 1600, 60, 0);
+                    al_draw_bitmap(bouton_quitter_grand, 1590, 175, 0);
+                    al_flip_display();
+
+                    clic_sur_quitter = true;
+
+                }
+                else {
+
+                    al_clear_to_color(al_map_rgb(0, 0, 0));
+                    al_draw_bitmap(image_accueil, 0, 0, 0);
+                    al_draw_bitmap(titre_accueil, al_get_display_width(display)/2 - al_get_bitmap_width(titre_accueil)/2, 0, 0);
+                    al_draw_bitmap(bouton_commencer_normal, 1600, 60, 0);
+                    al_draw_bitmap(bouton_quitter_normal, 1600, 180, 0);
+                    al_flip_display();
+
+                    clic_sur_commencer = false;
+                    clic_sur_quitter = false;
+
+                }
+                break;
+            }
+
+            case ALLEGRO_EVENT_TIMER: {
+                al_play_sample_instance(musique_fond_accueil);
+                break;
+            }
+
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+                if(event.mouse.button == 1) {
+                    al_play_sample(clic, 0.2, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+                    if(clic_sur_commencer) {
+                        al_stop_sample_instance(musique_fond_accueil);
+                        fin_page_accueil = true;
+                    }
+                    else if(clic_sur_quitter) {
+                        al_stop_sample_instance(musique_fond_accueil);
+                        fin_page_accueil = true;
+                        fin_choix_mode = true;
+                        fin_jeu = true;
+                    }
+                    break;
+                }
+                break;
+            }
+        }
+    }
+
+    while(!fin_choix_mode) {
+        if(!al_is_event_queue_empty(queue)) {
+            al_wait_for_event(queue, &event);
+        }
+
+        switch(event.type) {
+
+            case ALLEGRO_EVENT_DISPLAY_CLOSE: {
+                fin_choix_mode = true;
+                break;
+            }
+
+            case ALLEGRO_EVENT_KEY_DOWN: {
+                switch(event.keyboard.keycode) {
+                    case ALLEGRO_KEY_ESCAPE: {
+                        fin_choix_mode = true;
+                        break;
+                    }
+                }
+                break;
+            }
+
+            case ALLEGRO_EVENT_MOUSE_AXES: {
+                *curseur_x = event.mouse.x;
+                *curseur_y = event.mouse.y;
+
+                if(*curseur_x >= 600 && *curseur_x <= 790 && *curseur_y >= 360 && *curseur_y <= 671) {
+                    if(lancer_son == 0) {
+
+                        // al_play_sample(son_choix, 0.5, 0, 1, ALLEGRO_PLAYMODE_ONCE, &my_id);
+
+                        al_clear_to_color(al_map_rgb(0, 0, 0));
+                        al_draw_bitmap(fond_choix_mode, 0, 0, 0);
+                        al_draw_bitmap(panneau_communisme, 612, 760, 0);
+                        al_draw_bitmap(panneau_capitalisme, 1144, 760, 0);
+                        al_draw_bitmap(mode_communiste_grand, 588, 340, 0);
+                        al_draw_bitmap(mode_capitaliste_normal, 1110, 370, 0);
+                        al_flip_display();
+                    }
+                    lancer_son = 1;
+
+                    curseur_sur_communiste = true;
+
+                }
+                else if(*curseur_x >= 1110 && *curseur_x <= 1311 && *curseur_y >= 370 && *curseur_y <= 681) {
+                    if(lancer_son == 0) {
+
+                        //  al_play_sample(son_choix, 0.5, 0, 1, ALLEGRO_PLAYMODE_ONCE, &my_id);
+
+                        al_clear_to_color(al_map_rgb(0, 0, 0));
+                        al_draw_bitmap(fond_choix_mode, 0, 0, 0);
+                        al_draw_bitmap(panneau_communisme, 612, 760, 0);
+                        al_draw_bitmap(panneau_capitalisme, 1144, 760, 0);
+                        al_draw_bitmap(mode_communiste_normal, 600, 360, 0);
+                        al_draw_bitmap(mode_capitaliste_grand, 1086, 333, 0);
+                        al_flip_display();
+                    }
+                    lancer_son = 1;
+
+                    curseur_sur_capitaliste = true;
+
+                }
+                else {
+
+                    // al_stop_sample(&my_id);
+
+                    lancer_son = 0;
+
+                    al_clear_to_color(al_map_rgb(0, 0, 0));
+                    al_draw_bitmap(fond_choix_mode, 0, 0, 0);
+                    al_draw_bitmap(panneau_communisme, 612, 760, 0);
+                    al_draw_bitmap(panneau_capitalisme, 1144, 760, 0);
+                    al_draw_bitmap(mode_communiste_normal, 600, 360, 0);
+                    al_draw_bitmap(mode_capitaliste_normal, 1110, 370, 0);
+                    al_flip_display();
+
+                    curseur_sur_communiste = false;
+                    curseur_sur_capitaliste = false;
+
+                }
+                break;
+            }
+
+            case ALLEGRO_EVENT_TIMER: {
+                al_play_sample_instance(musique_fond_choix);
+                break;
+            }
+
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+                if(event.mouse.button == 1) {
+                    //al_stop_sample(&my_id);
+                    al_play_sample(clic, 0.2, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+                    if(curseur_sur_capitaliste || curseur_sur_communiste) {
+                        al_stop_sample_instance(musique_fond_choix);
+                        fin_choix_mode = true;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+
+    al_destroy_display(display);
+    al_destroy_event_queue(queue);
+    al_destroy_timer(timer);
+    al_destroy_sample(clic);
+    al_destroy_sample(musique_accueil);
+    al_destroy_sample_instance(musique_fond_accueil);
+    al_destroy_sample(musique_choix);
+    al_destroy_sample_instance(musique_fond_choix);
+    al_destroy_bitmap(image_accueil);
+    al_destroy_bitmap(titre_accueil);
+    al_destroy_bitmap(bouton_quitter_normal);
+    al_destroy_bitmap(bouton_quitter_grand);
+    al_destroy_bitmap(bouton_commencer_normal);
+    al_destroy_bitmap(bouton_commencer_grand);
+    al_destroy_bitmap(fond_choix_mode);
+    al_destroy_bitmap(panneau_capitalisme);
+    al_destroy_bitmap(panneau_communisme);
+    al_destroy_bitmap(mode_capitaliste_normal);
+    al_destroy_bitmap(mode_capitaliste_grand);
+    al_destroy_bitmap(mode_communiste_normal);
+    al_destroy_bitmap(mode_communiste_grand);
+
+
+}
+
+
 int TrouverNumeroCase(int iCase, int jCase){
     int numeroCase = iCase + jCase*NB_CASES;
     return numeroCase;

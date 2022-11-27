@@ -6,6 +6,8 @@
 //#include "map.h"
 #include "Graphe.h"
 
+
+void menuprincipal();
 void jeuPrincipale(int* finDuJeu);
 int TrouverNumeroCase(int iCase, int jCase);
 void ComposanteConnexeDuGraphe(Cases tabPlateau[NB_CASES][NB_CASES], Sommet2* Psommet2,bool compteurUsineEau,bool compteurUsineElec, int numeroConneDeUsineEau, int numeroConnexeDeUsineElec);

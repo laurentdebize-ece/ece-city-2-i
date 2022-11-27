@@ -438,6 +438,7 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     ALLEGRO_BITMAP* route2 = NULL;
     ALLEGRO_BITMAP* caserne = NULL;
     ALLEGRO_BITMAP* barreoutil = NULL;
+    ALLEGRO_BITMAP* chateau = NULL;
 
 
     /// tracer les carrés rouges quand on cliques dessus (tracer les routes)
@@ -454,6 +455,7 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     route2 = al_load_bitmap("../bitmap/route2.png");
     caserne = al_load_bitmap("../bitmap/caserne.png");
     barreoutil = al_load_bitmap("../bitmap/barreoutilimage.png");
+    chateau = al_load_bitmap("../bitmap/iconechateau.png");
 
     /// draw le rectangle bleu pour avoir le bat en main
     //al_draw_filled_rectangle(20,500, 70, 550, al_map_rgb(20,50,180));
@@ -477,6 +479,7 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_bitmap(eclair, 25, 200, 0);
     al_draw_bitmap(caserne, 24, 650, 0);
     al_draw_bitmap(construction, 22, 500, 0);
+    al_draw_bitmap(chateau, 25, 575, 0);
     al_flip_display();
 
     //encadrement bare à outil icone construction
@@ -487,6 +490,8 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_rectangle(20, 100, 80, 150, al_map_rgb(0, 0, 0), 7);
     //encadrement bare à outil icone eclair
     al_draw_rectangle(20, 200, 80, 250, al_map_rgb(0, 0, 0), 7);
+    //encadrement bare à outil icone chateau
+    al_draw_rectangle(20, 575, 80, 625, al_map_rgb(0, 0, 0), 7);
     //encadrement bare à outil icone caserne
     al_draw_rectangle(20, 650, 80, 700, al_map_rgb(0, 0, 0), 7);
 

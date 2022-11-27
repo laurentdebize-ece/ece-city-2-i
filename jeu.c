@@ -59,31 +59,31 @@ void menuprincipal(){
     queue = al_create_event_queue();
     assert(queue != NULL);
 
-    image_accueil = al_load_bitmap("../ecran_accueil.png"); //ok
-    titre_accueil = al_load_bitmap("../titre.png");//ok
-    bouton_commencer_normal = al_load_bitmap("../bitmap_bouton_commencer.png");//ok
-    bouton_quitter_normal = al_load_bitmap("../bitmap_bouton_quitter.png");//ok
-    bouton_commencer_grand = al_load_bitmap("../bouton_commencer_grand.png");//ok
-    bouton_quitter_grand = al_load_bitmap("../bouton_quitter_grand.png");//ok
-    fond_choix_mode = al_load_bitmap("../fond_mode.png");//ok
-    panneau_capitalisme = al_load_bitmap("../bouton_capitalisme.png");//ok
-    panneau_communisme = al_load_bitmap("../bouton_communisme.png");//ok
-    mode_communiste_normal = al_load_bitmap("../bitmap_communisme.png");//ok
-    mode_capitaliste_normal = al_load_bitmap("../bitmap_capitalisme.png");//ok
-    mode_communiste_grand = al_load_bitmap("../bitmap_communisme_grand.png");//ok
-    mode_capitaliste_grand = al_load_bitmap("../bitmap_capitalisme_grand.png");//ok
+    image_accueil = al_load_bitmap("../bitmap/ecran_accueil.png"); //ok
+    titre_accueil = al_load_bitmap("../bitmap/titre.png");//ok
+    bouton_commencer_normal = al_load_bitmap("../bitmap/bitmap_bouton_commencer.png");//ok
+    bouton_quitter_normal = al_load_bitmap("../bitmap/bitmap_bouton_quitter.png");//ok
+    bouton_commencer_grand = al_load_bitmap("../bitmap/bouton_commencer_grand.png");//ok
+    bouton_quitter_grand = al_load_bitmap("../bitmap/bouton_quitter_grand.png");//ok
+    fond_choix_mode = al_load_bitmap("../bitmap/fond_mode.png");//ok
+    panneau_capitalisme = al_load_bitmap("../bitmap/bouton_capitalisme.png");//ok
+    panneau_communisme = al_load_bitmap("../bitmap/bouton_communisme.png");//ok
+    mode_communiste_normal = al_load_bitmap("../bitmap/bitmap_communisme.png");//ok
+    mode_capitaliste_normal = al_load_bitmap("../bitmap/bitmap_capitalisme.png");//ok
+    mode_communiste_grand = al_load_bitmap("../bitmap/bitmap_communisme_grand.png");//ok
+    mode_capitaliste_grand = al_load_bitmap("../bitmap/bitmap_capitalisme_grand.png");//ok
 
     al_reserve_samples(15);
 
-    clic = al_load_sample("../BRUIT_-_CLIC.ogg");//ok
-    son_choix = al_load_sample("../magic-mobil-1.ogg");//ok
+    clic = al_load_sample("../sons/BRUIT_-_CLIC.ogg");//ok
+    son_choix = al_load_sample("../sons/magic-mobil-1.ogg");//ok
 
-    musique_accueil = al_load_sample("../SimCity-_-2013-_-Soundtrack-01.-SimCity-Theme.ogg");//ok
+    musique_accueil = al_load_sample("../sons/SimCity-_-2013-_-Soundtrack-01.-SimCity-Theme.ogg");//ok
     musique_fond_accueil = al_create_sample_instance(musique_accueil);
     al_set_sample_instance_playmode(musique_fond_accueil, ALLEGRO_PLAYMODE_LOOP);
     al_attach_sample_instance_to_mixer(musique_fond_accueil, al_get_default_mixer());
 
-    musique_choix = al_load_sample("../Son_choix_mode.ogg");//ok
+    musique_choix = al_load_sample("../sons/Son_choix_mode.ogg");//ok
     musique_fond_choix = al_create_sample_instance(musique_choix);
     al_set_sample_instance_playmode(musique_fond_choix, ALLEGRO_PLAYMODE_LOOP);
     al_attach_sample_instance_to_mixer(musique_fond_choix, al_get_default_mixer());

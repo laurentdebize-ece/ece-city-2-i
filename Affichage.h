@@ -16,6 +16,9 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
+#define LARGEUR 1920
+#define HAUTEUR 1080
+
 #define HAUTEUR_FE 830
 #define LARGEUR_FE 1436
 #define NBJOUEURMAX 4

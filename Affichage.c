@@ -432,6 +432,12 @@ void drawUsineElec(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
 void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal,int* ecefloos ,bool clickCarreBleu,bool choixUsineElec, bool choixUsineEau, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau){
     //al_clear_to_color(al_map_rgb(255,255,255));
 
+    ALLEGRO_BITMAP* eau = NULL;
+    ALLEGRO_BITMAP* eclair = NULL;
+    ALLEGRO_BITMAP* construction = NULL;
+    ALLEGRO_BITMAP* route2 = NULL;
+    ALLEGRO_BITMAP* caserne = NULL;
+    ALLEGRO_BITMAP* barreoutil = NULL;
 
 
     /// tracer les carrés rouges quand on cliques dessus (tracer les routes)
@@ -442,12 +448,12 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     
     
     al_init_image_addon();
-    eau = al_load_bitmap("../eau.png");
-    eclair = al_load_bitmap("../eclair.png");
-    construction = al_load_bitmap("../construction.png");
-    route2 = al_load_bitmap("../route2.png");
-    caserne = al_load_bitmap("../caserne.png");
-    barreoutil = al_load_bitmap("../barreoutilimage.png");
+    eau = al_load_bitmap("../bitmap/eau.png");
+    eclair = al_load_bitmap("../bitmap/eclair.png");
+    construction = al_load_bitmap("../bitmap/construction.png");
+    route2 = al_load_bitmap("../bitmap/route2.png");
+    caserne = al_load_bitmap("../bitmap/caserne.png");
+    barreoutil = al_load_bitmap("../bitmap/barreoutilimage.png");
 
     /// draw le rectangle bleu pour avoir le bat en main
     //al_draw_filled_rectangle(20,500, 70, 550, al_map_rgb(20,50,180));

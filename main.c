@@ -3,6 +3,7 @@
 
 int main(){
     int finDuJeu = 0;
+    menuprincipal();
     jeuPrincipale(&finDuJeu);
     return 0;
 }

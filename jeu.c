@@ -683,6 +683,7 @@ void jeuPrincipale(int* finDuJeu) {
     ALLEGRO_BITMAP* route2 = NULL;
     ALLEGRO_BITMAP* caserne = NULL;
     ALLEGRO_BITMAP* barreoutil = NULL;
+    ALLEGRO_BITMAP* chateau = NULL;
 
     /// Police
     ALLEGRO_FONT* police = NULL;
@@ -760,6 +761,7 @@ void jeuPrincipale(int* finDuJeu) {
     route2 = al_load_bitmap("../bitmap/route2.png");
     caserne = al_load_bitmap("../bitmap/caserne.png");
     barreoutil = al_load_bitmap("../bitmap/barreoutilimage.png");
+    chateau = al_load_bitmap("../bitmap/iconechateau.png");
 
 
 
@@ -1143,7 +1145,7 @@ void jeuPrincipale(int* finDuJeu) {
                     drawLine(ligne, X_DEPART, Y_DEPART);
                     dessinerRoutes(tabPlateau, RouteDroite, RouteDroite2, Tournant, Tournant2, Tournant3, Tournant4, DoubleTournant,DoubleTournant2, DoubleTournant3, DoubleTournant4, Croisement, timer, police, policePetite, affichageRoute, affichageEau, affichageElec);
                     drawMaison(tabPlateau, tabBit, nbNombreBatPose, affichageEau, affichageElec, timer, policePetite, TerrainVague, Maison1, Maison2, Maison3, Maison4, Ruine, Immeuble, GratteCiel, Cabane, PieceMonnaie, Habitant, CentralElectrique, ChateauEau, CroixRouge);
-                    BoiteAOutilEtTimer(tabPlateau, tabBit, sourisDessusX, sourisDessusY, nbNombreBatPose, valeurSourisX, valeurSourisY, minutes, &nbHabTotal, &eceFloos, clickCarreBleu, choixUsineElec,choixUsineEau, timer, timer1sec, police, TerrainVague, PieceMonnaie, Habitant, CentralElectrique, ChateauEau, eau, eclair, construction, route2, caserne, barreoutil);
+                    BoiteAOutilEtTimer(tabPlateau, tabBit, sourisDessusX, sourisDessusY, nbNombreBatPose, valeurSourisX, valeurSourisY, minutes, &nbHabTotal, &eceFloos, clickCarreBleu, choixUsineElec,choixUsineEau, timer, timer1sec, police, TerrainVague, PieceMonnaie, Habitant, CentralElectrique, ChateauEau, eau, eclair, construction, route2, caserne, barreoutil, chateau);
                 }
                 break;
             }

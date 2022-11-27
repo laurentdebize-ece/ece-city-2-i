@@ -429,7 +429,7 @@ void drawUsineElec(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
 
 
 
-void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal,int* ecefloos ,bool clickCarreBleu,bool choixUsineElec, bool choixUsineEau, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau, ALLEGRO_BITMAP* eau, ALLEGRO_BITMAP* eclair, ALLEGRO_BITMAP* construction ,ALLEGRO_BITMAP* route2,ALLEGRO_BITMAP* caserne,ALLEGRO_BITMAP* barreoutil){
+void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal,int* ecefloos ,bool clickCarreBleu,bool choixUsineElec, bool choixUsineEau, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau, ALLEGRO_BITMAP* eau, ALLEGRO_BITMAP* eclair, ALLEGRO_BITMAP* construction ,ALLEGRO_BITMAP* route2,ALLEGRO_BITMAP* caserne,ALLEGRO_BITMAP* barreoutil, ALLEGRO_BITMAP* chateau){
     //al_clear_to_color(al_map_rgb(255,255,255));
 
     /*ALLEGRO_BITMAP* eau = NULL;
@@ -477,17 +477,20 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_bitmap(eclair, 25, 200, 0);
     al_draw_bitmap(caserne, 24, 650, 0);
     al_draw_bitmap(construction, 22, 500, 0);
+    al_draw_bitmap(chateau, 25, 575, 0);
 
 
-    //encadrement bare à outil icone construction
+    //encadrement barre à outil icone construction
     al_draw_rectangle(20, 500, 80, 550, al_map_rgb(0, 0, 0), 7);
     //encadrelent barre à outil icone route2
     al_draw_rectangle(20, 400, 80, 450, al_map_rgb(0, 0, 0), 7);
-    //encadrement bare à outil icone eau
+    //encadrement barre à outil icone eau
     al_draw_rectangle(20, 100, 80, 150, al_map_rgb(0, 0, 0), 7);
-    //encadrement bare à outil icone eclair
+    //encadrement barre à outil icone eclair
     al_draw_rectangle(20, 200, 80, 250, al_map_rgb(0, 0, 0), 7);
-    //encadrement bare à outil icone caserne
+    //encadrement barre à outil icone chateau d'eau
+    al_draw_rectangle(20, 575, 80, 625, al_map_rgb(0, 0, 0), 7);
+    //encadrement barre à outil icone caserne
     al_draw_rectangle(20, 650, 80, 700, al_map_rgb(0, 0, 0), 7);
 
 

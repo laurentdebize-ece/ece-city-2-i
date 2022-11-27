@@ -437,25 +437,53 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     /// tracer les carrés rouges quand on cliques dessus (tracer les routes)
 
     /// dessiner les carrés noir, le plateau
-
-
-
     /// Draw la bitmap de la maison
+    
+    
+    
+    al_init_image_addon();
+    eau = al_load_bitmap("../eau.png");
+    eclair = al_load_bitmap("../eclair.png");
+    construction = al_load_bitmap("../construction.png");
+    route2 = al_load_bitmap("../route2.png");
+    caserne = al_load_bitmap("../caserne.png");
+    barreoutil = al_load_bitmap("../barreoutilimage.png");
 
     /// draw le rectangle bleu pour avoir le bat en main
-    al_draw_filled_rectangle(20,500, 70, 550, al_map_rgb(20,50,180));
+    //al_draw_filled_rectangle(20,500, 70, 550, al_map_rgb(20,50,180));
     ///carre quitter mode bat
-    al_draw_filled_rectangle(20,700, 70, 750, al_map_rgb(150,150,0));
+    //al_draw_filled_rectangle(20,700, 70, 750, al_map_rgb(150,150,0));
     /// carre rouge pour les routes
-    al_draw_filled_rectangle(20,400, 70, 450, al_map_rgb(100,0,0));
+    //al_draw_filled_rectangle(20,400, 70, 450, al_map_rgb(100,0,0));
     /// Niveau -1
-    al_draw_filled_rectangle(20,100, 70, 150, al_map_rgb(0,0,255));
+    //al_draw_filled_rectangle(20,100, 70, 150, al_map_rgb(0,0,255));
     /// Niveau -2
-    al_draw_filled_rectangle(20,200, 70, 250, al_map_rgb(255,255,0));
+    //al_draw_filled_rectangle(20,200, 70, 250, al_map_rgb(255,255,0));
     /// carre vert Pour eau
-    al_draw_filled_rectangle(20,570, 70, 620, al_map_rgb(0,255,0));
+    //al_draw_filled_rectangle(20,570, 70, 620, al_map_rgb(0,255,0));
     /// carre noir ppour elec
-    al_draw_filled_rectangle(20,630, 70, 680, al_map_rgb(0,0,0));
+    //al_draw_filled_rectangle(20,630, 70, 680, al_map_rgb(0,0,0));
+    
+    
+    al_draw_bitmap(barreoutil, -2, 0, 0);
+    al_draw_bitmap(route2, 25, 400, 0);
+    al_draw_bitmap(eau, 23, 100, 0);
+    al_draw_bitmap(eclair, 25, 200, 0);
+    al_draw_bitmap(caserne, 24, 650, 0);
+    al_draw_bitmap(construction, 22, 500, 0);
+    al_flip_display();
+
+    //encadrement bare à outil icone construction
+    al_draw_rectangle(20, 500, 80, 550, al_map_rgb(0, 0, 0), 7);
+    //encadrelent barre à outil icone route2
+    al_draw_rectangle(20, 400, 80, 450, al_map_rgb(0, 0, 0), 7);
+    //encadrement bare à outil icone eau
+    al_draw_rectangle(20, 100, 80, 150, al_map_rgb(0, 0, 0), 7);
+    //encadrement bare à outil icone eclair
+    al_draw_rectangle(20, 200, 80, 250, al_map_rgb(0, 0, 0), 7);
+    //encadrement bare à outil icone caserne
+    al_draw_rectangle(20, 650, 80, 700, al_map_rgb(0, 0, 0), 7);
+
 
 
     /// pour avoir le bat en main selon la pose de la souris
@@ -507,4 +535,10 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_bitmap(Habitant, 750, 10, 0);
     al_draw_textf(police, al_map_rgb(0, 0, 0), 800, 20, 0, ": %d ", *nbHabTotal);
     al_flip_display();
+    
+    al_destroy_bitmap(eau);
+    al_destroy_bitmap(eclair);
+    al_destroy_bitmap(construction);
+    al_destroy_bitmap(route2);
+    al_destroy_bitmap(caserne);
 }

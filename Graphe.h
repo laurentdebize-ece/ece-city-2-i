@@ -69,9 +69,6 @@ typedef struct {
     int numeroCompoConnexe;
     int numeroCaseSommetAdj[4];
     int nbSommetAdj;
-    int distance;
-    int marque;
-    int numeroChateau;
 }Cases;
 
 typedef struct {
@@ -121,6 +118,9 @@ typedef struct Som{
     int numeroCompoConnexe;
     int numeroCaseSommetAdj[4];
     int nbSommetAdj;
+    int distance;
+    int marque;
+    int numeroChateau;
 }Sommet2;
 
 typedef struct {

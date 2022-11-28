@@ -117,10 +117,10 @@ void CreerArete2(Sommet2 ** Psommet2, int i, int j, int i_bis, int j_bis, int nu
         temp->next->typeHab = tabPlateau[i][j].sommetDansLeGrapheHab;
         temp->next->NumeroDelaRoutePose = nbRoutesPose;
         temp->next->typeUsineEau = tabPlateau[i][j].sommetDansLeGrapheUsineEau;
-        if(temp->next->typeUsineEau == 1){
+        /*if(temp->next->typeUsineEau == 1){
             *numChateau++;
             temp->numeroChateau = *numChateau;
-        }
+        }*/
         temp->next->typeUsineElec = tabPlateau[i][j].sommetDansLeGrapheUsineElec;
         temp->next->tabMaisonAutourRoutes =tabPlateau[i][j].tabMaisonAutourRoutes;
         //printf("%d %d\n", temp->next->typeUsineElec, temp->next->typeUsineEau);

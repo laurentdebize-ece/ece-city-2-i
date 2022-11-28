@@ -429,10 +429,10 @@ void drawUsineElec(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BA
 
 
 
-void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal,int* ecefloos ,bool clickCarreBleu,bool choixUsineElec, bool choixUsineEau, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau){
+void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_MAX_BAT], int sourisDessusX, int sourisDessusY, int nbNombreBatPose, int valeurSourisX, int valeurSourisY, int minutes,int* nbHabTotal,int* ecefloos ,bool clickCarreBleu,bool choixUsineElec, bool choixUsineEau, ALLEGRO_TIMER* timer, ALLEGRO_TIMER* timer1sec, ALLEGRO_FONT* police, ALLEGRO_BITMAP* TerrainVague, ALLEGRO_BITMAP* PieceMonnaie, ALLEGRO_BITMAP* Habitant, ALLEGRO_BITMAP* CentralElectrique, ALLEGRO_BITMAP* ChateauEau, ALLEGRO_BITMAP* eau, ALLEGRO_BITMAP* eclair, ALLEGRO_BITMAP* construction ,ALLEGRO_BITMAP* route2,ALLEGRO_BITMAP* caserne,ALLEGRO_BITMAP* barreoutil){
     //al_clear_to_color(al_map_rgb(255,255,255));
 
-    ALLEGRO_BITMAP* eau = NULL;
+    /*ALLEGRO_BITMAP* eau = NULL;
     ALLEGRO_BITMAP* eclair = NULL;
     ALLEGRO_BITMAP* construction = NULL;
     ALLEGRO_BITMAP* route2 = NULL;
@@ -453,7 +453,7 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     construction = al_load_bitmap("../bitmap/construction.png");
     route2 = al_load_bitmap("../bitmap/route2.png");
     caserne = al_load_bitmap("../bitmap/caserne.png");
-    barreoutil = al_load_bitmap("../bitmap/barreoutilimage.png");
+    barreoutil = al_load_bitmap("../bitmap/barreoutilimage.png");*/
 
     /// draw le rectangle bleu pour avoir le bat en main
     //al_draw_filled_rectangle(20,500, 70, 550, al_map_rgb(20,50,180));
@@ -466,9 +466,9 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     /// Niveau -2
     //al_draw_filled_rectangle(20,200, 70, 250, al_map_rgb(255,255,0));
     /// carre vert Pour eau
-    //al_draw_filled_rectangle(20,570, 70, 620, al_map_rgb(0,255,0));
+    al_draw_filled_rectangle(20,570, 70, 620, al_map_rgb(0,255,0));
     /// carre noir ppour elec
-    //al_draw_filled_rectangle(20,630, 70, 680, al_map_rgb(0,0,0));
+    al_draw_filled_rectangle(20,630, 70, 680, al_map_rgb(0,0,0));
     
     
     al_draw_bitmap(barreoutil, -2, 0, 0);
@@ -477,7 +477,7 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_bitmap(eclair, 25, 200, 0);
     al_draw_bitmap(caserne, 24, 650, 0);
     al_draw_bitmap(construction, 22, 500, 0);
-    al_flip_display();
+
 
     //encadrement bare à outil icone construction
     al_draw_rectangle(20, 500, 80, 550, al_map_rgb(0, 0, 0), 7);
@@ -542,9 +542,9 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_textf(police, al_map_rgb(0, 0, 0), 800, 20, 0, ": %d ", *nbHabTotal);
     al_flip_display();
     
-    al_destroy_bitmap(eau);
+    /*al_destroy_bitmap(eau);
     al_destroy_bitmap(eclair);
     al_destroy_bitmap(construction);
     al_destroy_bitmap(route2);
-    al_destroy_bitmap(caserne);
+    al_destroy_bitmap(caserne);*/
 }

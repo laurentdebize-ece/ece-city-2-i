@@ -182,11 +182,11 @@ void dessinerRoutes(Cases tabPlateau [NB_CASES][NB_CASES], ALLEGRO_BITMAP* Route
             }
             if(tabPlateau[i][j].routeOccupe == 1 && affichageEau == TRUE){
                 al_draw_filled_rectangle(tabPlateau[i][j].x1, tabPlateau[i][j].y1, tabPlateau[i][j].x1 + LARGEUR_CASE, tabPlateau[i][j].y1+HAUTEUR_CASE,al_map_rgb(0,120,255));
-                al_draw_text(police, al_map_rgb(0,0,0), 100, 120, 0, "Niveau -1");
+                al_draw_text(police, al_map_rgb(0,0,0), 150, 120, 0, "Niveau -1");
             }
             if (tabPlateau[i][j].routeOccupe == 1 && affichageElec == TRUE){
                 al_draw_filled_rectangle(tabPlateau[i][j].x1, tabPlateau[i][j].y1, tabPlateau[i][j].x1 + LARGEUR_CASE, tabPlateau[i][j].y1+HAUTEUR_CASE,al_map_rgb(255,255,0));
-                al_draw_text(police, al_map_rgb(0,0,0), 100, 220, 0, "Niveau -2");
+                al_draw_text(police, al_map_rgb(0,0,0), 150, 220, 0, "Niveau -2");
             }
         }
     }
@@ -471,7 +471,7 @@ void BoiteAOutilEtTimer(Cases tabPlateau[NB_CASES][NB_CASES], Bitmap tabBit[NB_M
     al_draw_filled_rectangle(20,630, 70, 680, al_map_rgb(0,0,0));
     
     
-    al_draw_bitmap(barreoutil, -2, 0, 0);
+    al_draw_bitmap(barreoutil, -30, 70, 0);
     al_draw_bitmap(route2, 25, 400, 0);
     al_draw_bitmap(eau, 23, 100, 0);
     al_draw_bitmap(eclair, 25, 200, 0);
